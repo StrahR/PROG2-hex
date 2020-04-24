@@ -4,24 +4,6 @@ import koordinati.Koordinati;
 
 public class Igra {
 
-    public static enum Player {
-        P1, P2, None;
-
-        private static Player onTurn = None;
-
-        private static void toggleTurn() {
-            switch (onTurn) {
-                case P1:
-                    onTurn = P2;
-                    break;
-                case P2:
-                    onTurn = P1;
-                    break;
-                case None:
-            }
-        }
-    }
-
     private static Player[][] board;
     private static int size = 11;
 
@@ -36,13 +18,13 @@ public class Igra {
 
     public Igra() {
         emptyBoard();
-        Player.onTurn = Player.P1;
+        Player.onTurn = Player.RED;
     }
 
     public Igra(final int n) {
         size = n;
         emptyBoard();
-        Player.onTurn = Player.P1;
+        Player.onTurn = Player.RED;
     }
 
     // Odigra potezo `koordinati`, če je možna. Metoda naj vrne `true`, če je poteza
