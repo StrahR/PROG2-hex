@@ -1,5 +1,6 @@
 
 import logika.Igra;
+import koordinati.Koordinati;
 
 /**
  * Hello world!
@@ -8,6 +9,8 @@ import logika.Igra;
 public class Hex {
     public static void main(String[] args) {
         Igra game = new Igra();
-        System.out.println("Hello World!");
+        game.odigraj(new Koordinati(1, 2));
+        game.odigraj(new Koordinati(3, 2));
+        System.out.println(game);
     }
 }
