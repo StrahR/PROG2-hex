@@ -11,6 +11,8 @@ public class Hex {
         Igra game = new Igra();
         game.odigraj(new Koordinati(1, 2));
         game.odigraj(new Koordinati(3, 2));
+        game.razveljavi();
+        game.odigraj(new Koordinati(1, 3));
         System.out.println(game);
     }
 }
