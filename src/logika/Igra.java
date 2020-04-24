@@ -62,9 +62,9 @@ public class Igra {
     @Override
     public String toString() {
         final StringBuilder str = new StringBuilder();
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                str.append(board[i][j]);
+        for (int y = 0; y < size; y++) {
+            for (int x = 0; x < size; x++) {
+                str.append(board[x][y]);
             }
             str.append("\n");
         }
