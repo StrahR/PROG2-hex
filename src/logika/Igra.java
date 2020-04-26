@@ -95,7 +95,7 @@ public class Igra {
             for (int[] s : smeri) {
                 int dx = s[0];
                 int dy = s[1];
-                if (board[i + dx][j + dy] == Player.onTurn  && ! visited[i + dx][j + dy]) floodFill( + dx, j + dy); 
+                if (board[i + dx][j + dy] == Player.onTurn  && !visited[i + dx][j + dy]) floodFill( + dx, j + dy); 
         }
 
         for (int i =0; i < size; i++) {
