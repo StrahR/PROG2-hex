@@ -34,6 +34,15 @@ public class Igra {
         Player.onTurn = Player.RED;
     }
 
+    /** 
+     *  Preveri, ali je poteza slučajno izven plošče.
+    */ 
+    public boolean isValidMove(int x, int y) {
+        if (x >= size || x < 0 || y >= size || y < 0) 
+            return false;
+        return true;
+    }
+
     public boolean checkWin(Koordinati p) {
         boolean start = false;
         boolean end = false;
@@ -79,9 +88,8 @@ public class Igra {
             for (final int[] s : smeri) {
                 final int dx = s[0];
                 final int dy = s[1];
-                if (x + dx >= size || x + dx < 0 || y + dy >= size || y + dx < 0) {
+                if (!isValidMove(x + dx, y + dy))
                     continue;
-                }
                 if (board[x + dx][y + dy] == Player.onTurn && !visited[x + dx][y + dy]) {
                     stack.add(new Koordinati(x + dx, y + dy));
                 }
@@ -97,6 +105,8 @@ public class Igra {
      * @return true, če je bila poteza uspešno odigrana
      */
     public boolean odigraj(final Koordinati p) {
+        if (!isValidMove(p.getX(), p.getY()))
+            return false;
         if (board[p.getX()][p.getY()] != Player.None)
             return false;
         moves.add(p);
