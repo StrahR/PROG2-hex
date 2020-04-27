@@ -54,15 +54,15 @@ public class Igra {
             }
         }
 
-        Player colour = board[p.getX()][p.getY()];
+        final Player colour = board[p.getX()][p.getY()];
 
         // flood-fill
-        Stack<Koordinati> stack = new Stack<Koordinati>();
+        final Stack<Koordinati> stack = new Stack<Koordinati>();
         stack.add(p);
         while (!stack.isEmpty()) {
-            Koordinati tmp = stack.pop();
-            int x = tmp.getX();
-            int y = tmp.getY();
+            final Koordinati tmp = stack.pop();
+            final int x = tmp.getX();
+            final int y = tmp.getY();
             visited[x][y] = true;
 
             if (colour == Player.RED) {
