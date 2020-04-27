@@ -3,6 +3,8 @@ package logika;
 import koordinati.Koordinati;
 import java.util.ArrayList;
 import java.util.Stack;
+import java.util.Set;
+import java.util.HashSet;
 
 public class Igra {
 
@@ -41,6 +43,20 @@ public class Igra {
         if (x >= size || x < 0 || y >= size || y < 0) 
             return false;
         return true;
+    }
+
+    /**
+     * Vrne množico koordinat vseh mogočih potez za igralca, ki je trenutno na potezi
+     */
+    public Set<Koordinati> possibleMoves() {
+        Set<Koordinati> moves = new HashSet<Koordinati>();
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                if (board[x][y] == Player.None)
+                    moves.add(new Koordinati(x,y));
+                }
+            }
+        return moves;
     }
 
     public boolean checkWin(Koordinati p) {
