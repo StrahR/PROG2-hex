@@ -11,7 +11,7 @@ public class Okno extends JFrame {
     public Okno(String name, Platno canvas) {
         this.setTitle(name);
         this.canvas = canvas;
-        this.add(canvas, BorderLayout.CENTER);
+        this.add(this.canvas, BorderLayout.CENTER);
         this.setVisible(true);
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.pack();
