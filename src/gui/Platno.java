@@ -33,7 +33,7 @@ public class Platno extends JPanel implements MouseListener {
 
     // Dolžina stranice hexa
     private double sideLength() {
-        return Math.min(2 * getWidth() / (Math.sqrt(3) * (3 * Igra.size - 1)), 2 * getHeight() / (3 * Igra.size + 1));
+        return Math.min(2 * getWidth() / (Math.sqrt(3) * (3 * Igra.size - 1)), 2 * getHeight() / (3 * Igra.size + 1.0));
     }
 
     private Color getPlayerColor(final Player player) {
