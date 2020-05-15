@@ -36,26 +36,27 @@ public class Igra {
         Player.onTurn = Player.RED;
     }
 
-    /** 
-     *  Preveri, ali je poteza slučajno izven plošče.
-    */ 
+    /**
+     * Preveri, ali je poteza slučajno izven plošče.
+     */
     public boolean isValidMove(int x, int y) {
-        if (x >= size || x < 0 || y >= size || y < 0) 
+        if (x >= size || x < 0 || y >= size || y < 0)
             return false;
         return true;
     }
 
     /**
-     * Vrne množico koordinat vseh mogočih potez za igralca, ki je trenutno na potezi
+     * Vrne množico koordinat vseh mogočih potez za igralca, ki je trenutno na
+     * potezi
      */
     public Set<Koordinati> possibleMoves() {
         Set<Koordinati> moves = new HashSet<Koordinati>();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {
                 if (board[x][y] == Player.None)
-                    moves.add(new Koordinati(x,y));
-                }
+                    moves.add(new Koordinati(x, y));
             }
+        }
         return moves;
     }
 
