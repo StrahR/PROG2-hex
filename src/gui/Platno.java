@@ -11,13 +11,15 @@ import logika.Player;
 
 public class Platno extends JPanel implements MouseListener {
 
+    private static class Colour {
     private static Color bg = Color.WHITE;
     private static Color fg = Color.BLACK;
     private static Color P1 = Color.RED;
     private static Color P2 = Color.BLUE;
+    }
 
     public Platno() {
-        setBackground(bg);
+        setBackground(Colour.bg);
         this.addMouseListener(this);
     }
 
@@ -37,10 +39,11 @@ public class Platno extends JPanel implements MouseListener {
     private Color getPlayerColor(final Player player) {
         switch (player) {
             case RED:
-                return P1;
+                return Colour.P1;
             case BLUE:
-                return P2;
+                return Colour.P2;
             default:
+                return Colour.bg;
                 return bg;
         }
     }
