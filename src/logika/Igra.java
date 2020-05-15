@@ -9,7 +9,7 @@ import java.util.HashSet;
 public class Igra {
 
     private static Player[][] board;
-    private static int size = 11;
+    public static int size = 11;
 
     private static ArrayList<Koordinati> moves = new ArrayList<Koordinati>();
 
