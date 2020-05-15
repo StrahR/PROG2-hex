@@ -1,6 +1,6 @@
 package logika;
 
-import koordinati.Koordinati;
+import splosno.Koordinati;
 import java.util.ArrayList;
 import java.util.Stack;
 import java.util.Set;

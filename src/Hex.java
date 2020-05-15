@@ -1,6 +1,6 @@
 
 import logika.Igra;
-import koordinati.Koordinati;
+import splosno.Koordinati;
 
 /**
  * Hello world!
