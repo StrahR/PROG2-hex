@@ -13,5 +13,7 @@ public class Okno extends JFrame {
         this.canvas = canvas;
         this.add(canvas, BorderLayout.CENTER);
         this.setVisible(true);
+        this.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.pack();
     }
 }
