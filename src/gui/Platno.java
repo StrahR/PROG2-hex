@@ -8,6 +8,7 @@ import java.awt.event.MouseListener;
 
 import logika.Igra;
 import logika.Player;
+import splosno.Koordinati;
 
 @SuppressWarnings("serial")
 public class Platno extends JPanel implements MouseListener {
@@ -115,7 +116,17 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        // TODO: react to mouse click
+        for (int i = 0; i < Igra.size; i++) {
+            for (int j = 0; j < Igra.size; j++) {
+                final int[][] p = extremalPoints(i, j);
+                if (new Polygon(p[0], p[1], 6).contains(e.getX(), e.getY())) {
+                    // Tle je nek problem s static contextom
+                    // Igra.odigraj(new Koordinati(i, j));
+                    System.out.println(i + ", " + j);
+                    return;
+                }
+            }
+        }
     }
 
     @Override
