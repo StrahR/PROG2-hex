@@ -13,6 +13,8 @@ import splosno.Koordinati;
 @SuppressWarnings("serial")
 public class Platno extends JPanel implements MouseListener {
 
+    private Igra igra;
+
     private static class Colour {
         private static Color bg = Color.WHITE;
         private static Color fg = Color.BLACK;
@@ -20,9 +22,10 @@ public class Platno extends JPanel implements MouseListener {
         private static Color P2 = Color.BLUE;
     }
 
-    public Platno() {
+    public Platno(Igra igra) {
         setBackground(Colour.bg);
         this.addMouseListener(this);
+        this.igra = igra;
     }
 
     @Override
@@ -83,9 +86,8 @@ public class Platno extends JPanel implements MouseListener {
      * @param j
      * @param player
      */
-    public void paintHex(final Graphics2D g2, final int i, final int j, final Player player) {
+    public void paintHex(final Graphics2D g2, final int[][] p, final Player player) {
         final double w = sideLength();
-        final int[][] p = extremalPoints(i, j);
 
         g2.setColor(getPlayerColor(player));
         g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
@@ -114,17 +116,24 @@ public class Platno extends JPanel implements MouseListener {
         }
     }
 
+    public boolean checkTile(int i, int j, int x, int y) {
+        final int[][] p = extremalPoints(i, j);
+        if (new Polygon(p[0], p[1], 6).contains(x, y)) {
+            igra.odigraj(new Koordinati(i, j));
+            // Ne vem, od kje dobit g2
+            // paintHex(g2, p, Player.onTurn);
+            return true;
+        }
+        return false;
+    }
+
     @Override
     public void mouseClicked(final MouseEvent e) {
+        final int x = e.getX();
+        final int y = e.getY();
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
-                final int[][] p = extremalPoints(i, j);
-                if (new Polygon(p[0], p[1], 6).contains(e.getX(), e.getY())) {
-                    // Tle je nek problem s static contextom
-                    // Igra.odigraj(new Koordinati(i, j));
-                    System.out.println(i + ", " + j);
-                    return;
-                }
+                if (checkTile(i, j, x, y)) return;
             }
         }
     }
