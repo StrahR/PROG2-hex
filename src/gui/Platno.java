@@ -43,7 +43,7 @@ public class Platno extends JPanel implements MouseListener {
 
     private double[] topLeft(final int i, final int j) {
         final double w = sideLength();
-        double[] r = { w * (i + j / 2.0) * Math.sqrt(3), w * j * 3 / 2.0 };
+        final double[] r = { w * (i + j / 2.0) * Math.sqrt(3), w * j * 3 / 2.0 };
         return r;
     }
 
@@ -63,7 +63,7 @@ public class Platno extends JPanel implements MouseListener {
         final int x6 = (int) (tl[0]);
         final int y6 = (int) (tl[1] + w * 3 / 2);
         // { { x1, y1 }, { x2, y2 }, { x3, y3 }, { x4, y4 }, { x5, y5 }, { x6, y6 } };
-        int[][] r = { { x1, x2, x3, x4, x5, x6 }, { y1, y2, y3, y4, y5, y6 } };
+        final int[][] r = { { x1, x2, x3, x4, x5, x6 }, { y1, y2, y3, y4, y5, y6 } };
         return r;
     }
 
@@ -116,7 +116,7 @@ public class Platno extends JPanel implements MouseListener {
         }
     }
 
-    public boolean checkTile(int i, int j, int x, int y) {
+    public boolean checkTile(final int i, final int j, final int x, final int y) {
         final int[][] p = extremalPoints(i, j);
         if (new Polygon(p[0], p[1], 6).contains(x, y)) {
             igra.odigraj(new Koordinati(i, j));
@@ -133,7 +133,8 @@ public class Platno extends JPanel implements MouseListener {
         final int y = e.getY();
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
-                if (checkTile(i, j, x, y)) return;
+                if (checkTile(i, j, x, y))
+                    return;
             }
         }
     }
