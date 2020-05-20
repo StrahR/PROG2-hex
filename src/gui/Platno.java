@@ -8,12 +8,10 @@ import java.awt.event.MouseListener;
 
 import logika.Igra;
 import logika.Player;
-import splosno.Koordinati;
+import runner.Runner;
 
 @SuppressWarnings("serial")
 public class Platno extends JPanel implements MouseListener {
-
-    private Igra igra;
 
     private static class Colour {
         private static Color bg = Color.WHITE;
@@ -22,10 +20,9 @@ public class Platno extends JPanel implements MouseListener {
         private static Color P2 = Color.BLUE;
     }
 
-    public Platno(Igra igra) {
+    public Platno() {
         setBackground(Colour.bg);
         this.addMouseListener(this);
-        this.igra = igra;
     }
 
     @Override
@@ -107,13 +104,15 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     protected void paintComponent(final Graphics g) {
-        super.paintComponent(g);
-        final Graphics2D g2 = (Graphics2D) g;
+        if (Runner.igra != null) {
+            super.paintComponent(g);
+            final Graphics2D g2 = (Graphics2D) g;
 
-        for (int i = 0; i < Igra.size; i++) {
-            for (int j = 0; j < Igra.size; j++) {
-                paintHex(g2, i, j, Igra.getHexColor(i, j));
-                outlineHex(g2, i, j);
+            for (int i = 0; i < Igra.size; i++) {
+                for (int j = 0; j < Igra.size; j++) {
+                    paintHex(g2, i, j, Igra.getHexColor(i, j));
+                    outlineHex(g2, i, j);
+                }
             }
         }
     }
@@ -126,14 +125,16 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        final int x = e.getX();
-        final int y = e.getY();
-        for (int i = 0; i < Igra.size; i++) {
-            for (int j = 0; j < Igra.size; j++) {
-                if (checkTile(i, j, x, y)) {
-                    igra.odigraj(new Koordinati(i, j));
-                    this.repaint(); // TODO: replace with call to runner
-                    return;
+        if (Runner.igra != null && Igra.status == Igra.Status.IN_PROGRESS
+                && Runner.currentPlayerType() == Player.Type.HUMAN) {
+            final int x = e.getX();
+            final int y = e.getY();
+            for (int i = 0; i < Igra.size; i++) {
+                for (int j = 0; j < Igra.size; j++) {
+                    if (checkTile(i, j, x, y)) {
+                        Runner.playHuman(i, j);
+                        return;
+                    }
                 }
             }
         }

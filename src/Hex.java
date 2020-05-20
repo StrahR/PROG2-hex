@@ -1,5 +1,6 @@
 
 import logika.Igra;
+import runner.Runner;
 
 import gui.Okno;
 import gui.Platno;
@@ -10,8 +11,8 @@ import gui.Platno;
  */
 public class Hex {
     public static void main(String[] args) {
-        Igra game = new Igra();
-        Platno platno = new Platno(game);
+        Platno platno = new Platno();
         Okno okno = new Okno("Hex", platno);
+        Runner.okno = okno;
     }
 }

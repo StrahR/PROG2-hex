@@ -4,9 +4,12 @@ import javax.swing.*;
 
 import logika.Igra;
 import logika.Player;
+import runner.Runner;
+
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.EnumMap;
 
 @SuppressWarnings("serial")
 public class Okno extends JFrame implements ActionListener {
@@ -76,5 +79,68 @@ public class Okno extends JFrame implements ActionListener {
         getContentPane().add(undo, undo_layout);
         undo.setText("Razveljavi");
         undo.addActionListener(this);
+
+    }
+
+    @Override
+    public void actionPerformed(final ActionEvent e) {
+        if (e.getSource() == igraClovekRacunalnik) {
+            Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
+            Runner.playerType.put(Player.RED, Player.Type.HUMAN);
+            Runner.playerType.put(Player.BLUE, Player.Type.AI);
+            Runner.playerName = new EnumMap<Player, String>(Player.class);
+            Runner.playerName.put(Player.RED, "Jože");
+            Runner.playerName.put(Player.BLUE, "Štefan");
+            Runner.newGame();
+        } else if (e.getSource() == igraRacunalnikClovek) {
+            Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
+            Runner.playerType.put(Player.RED, Player.Type.AI);
+            Runner.playerType.put(Player.BLUE, Player.Type.HUMAN);
+            Runner.playerName = new EnumMap<Player, String>(Player.class);
+            Runner.playerName.put(Player.RED, "Jaka");
+            Runner.playerName.put(Player.BLUE, "Alfonz");
+            Runner.newGame();
+        } else if (e.getSource() == igraClovekClovek) {
+            Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
+            Runner.playerType.put(Player.RED, Player.Type.HUMAN);
+            Runner.playerType.put(Player.BLUE, Player.Type.HUMAN);
+            Runner.playerName = new EnumMap<Player, String>(Player.class);
+            Runner.playerName.put(Player.RED, "Ludvik");
+            Runner.playerName.put(Player.BLUE, "Špela");
+            Runner.newGame();
+        } else if (e.getSource() == igraRacunalnikRacunalnik) {
+            Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
+            Runner.playerType.put(Player.RED, Player.Type.AI);
+            Runner.playerType.put(Player.BLUE, Player.Type.AI);
+            Runner.playerName = new EnumMap<Player, String>(Player.class);
+            Runner.playerName.put(Player.RED, "Karl");
+            Runner.playerName.put(Player.BLUE, "Elizabeta");
+            Runner.newGame();
+        } else if (e.getSource() == undo) {
+            if (Runner.igra != null) {
+                Runner.undo();
+            }
+        }
+    }
+
+    public void refreshGUI() {
+        if (Runner.igra == null) {
+            status.setText("Igra ni v teku.");
+        } else {
+            switch (Igra.status) {
+                case TIE:
+                    status.setText("Neodločeno!");
+                    break;
+                case IN_PROGRESS:
+                    status.setText("Na potezi je " + Runner.playerName.get(Player.onTurn) + " - "
+                            + Runner.playerType.get(Player.onTurn));
+                    break;
+                case WIN:
+                    status.setText("Bravo " + Runner.playerName.get(Player.opponent()) + " - "
+                            + Runner.playerType.get(Player.opponent()));
+                    break;
+            }
+        }
+        canvas.repaint();
     }
 }
