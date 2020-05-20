@@ -13,6 +13,18 @@ public class Igra {
 
     private static ArrayList<Koordinati> moves = new ArrayList<Koordinati>();
 
+    public static enum Status {
+        WIN, TIE, IN_PROGRESS;
+
+        public static Player winner = Player.None;
+
+        public static void setWinner(final Player p) {
+            winner = p;
+        }
+    }
+
+    public static Status status = Status.IN_PROGRESS;
+
     /**
      * Izprazni igralno ploščo
      */
@@ -28,12 +40,16 @@ public class Igra {
     public Igra() {
         emptyBoard();
         Player.onTurn = Player.RED;
+        status = Status.IN_PROGRESS;
+        Status.winner = Player.None;
     }
 
     public Igra(final int n) {
         size = n;
         emptyBoard();
         Player.onTurn = Player.RED;
+        status = Status.IN_PROGRESS;
+        Status.winner = Player.None;
     }
 
     /**
@@ -132,6 +148,10 @@ public class Igra {
             return false;
         moves.add(p);
         board[p.getX()][p.getY()] = Player.onTurn;
+        if (checkWin(p)) {
+            status = Status.WIN;
+            Status.setWinner(Player.onTurn);
+        }
         Player.toggleTurn();
         return true;
     }
@@ -145,6 +165,10 @@ public class Igra {
         board[p.getX()][p.getY()] = Player.None;
         moves.remove(last);
         Player.toggleTurn();
+
+        // we can only make a move when game is in progress
+        status = Status.IN_PROGRESS;
+        Status.winner = Player.None;
     }
 
     @Override
