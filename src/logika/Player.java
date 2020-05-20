@@ -3,18 +3,25 @@ package logika;
 public enum Player {
     RED, BLUE, None;
 
+    public enum Type {
+        HUMAN, AI, None;
+    }
+
     public static Player onTurn = None;
 
-    public static void toggleTurn() {
+    public static Player opponent() {
         switch (onTurn) {
             case RED:
-                onTurn = BLUE;
-                break;
+                return BLUE;
             case BLUE:
-                onTurn = RED;
-                break;
-            case None:
+                return RED;
+            default:
+                return None;
         }
+    }
+
+    public static void toggleTurn() {
+        onTurn = opponent();
     }
 
     @Override
