@@ -126,16 +126,19 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
+        if (Runner.currentPlayerType() == Player.Type.HUMAN) {
         final int x = e.getX();
         final int y = e.getY();
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
                 if (checkTile(i, j, x, y)) {
+                        Runner.playHuman(new Koordinati(i, j));
                     this.repaint(); // TODO: replace with call to runner
                     return;
                 }
             }
         }
+    }
     }
 
     @Override
