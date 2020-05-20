@@ -1,5 +1,3 @@
-
-import logika.Igra;
 import runner.Runner;
 
 import gui.Okno;
