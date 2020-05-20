@@ -131,7 +131,7 @@ public class Igra {
         return false;
     }
 
-    public Player getHexColor(final int i, final int j) {
+    public static Player getHexColor(final int i, final int j) {
         return board[i][j];
     }
 
