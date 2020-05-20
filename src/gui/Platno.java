@@ -131,6 +131,7 @@ public class Platno extends JPanel implements MouseListener {
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
                 if (checkTile(i, j, x, y)) {
+                    igra.odigraj(new Koordinati(i, j));
                     this.repaint(); // TODO: replace with call to runner
                     return;
                 }
