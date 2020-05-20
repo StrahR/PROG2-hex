@@ -1,0 +1,18 @@
+name: Google Java Format  # feel free to pick your own name
+
+on:
+  push:
+    branches:
+    - lint-test
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    # Important: This sets up your GITHUB_WORKSPACE environment variable
+    - uses: actions/checkout@v2
+
+    - name: Google Java Format
+      uses: axel-op/googlejavaformat-action@v3.0.0
+
