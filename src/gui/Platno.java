@@ -86,8 +86,10 @@ public class Platno extends JPanel implements MouseListener {
      * @param j
      * @param player
      */
-    public void paintHex(final Graphics2D g2, final int[][] p, final Player player) {
+    private void paintHex(final Graphics2D g2, final int i, final int j, final Player player) {
         final double w = sideLength();
+
+        final int[][] p = extremalPoints(i, j);
 
         g2.setColor(getPlayerColor(player));
         g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
@@ -96,6 +98,10 @@ public class Platno extends JPanel implements MouseListener {
 
     private void outlineHex(final Graphics2D g2, final int i, final int j) {
         final int[][] p = extremalPoints(i, j);
+        final double w = sideLength();
+
+        g2.setColor(Colour.fg);
+        g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
         g2.drawPolygon(p[0], p[1], 6);
     }
 
@@ -104,13 +110,9 @@ public class Platno extends JPanel implements MouseListener {
         super.paintComponent(g);
         final Graphics2D g2 = (Graphics2D) g;
 
-        final double w = sideLength();
-
-        // črte
-        g2.setColor(Colour.fg);
-        g2.setStroke(new BasicStroke((float) (w * LINE_WIDTH)));
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
+                paintHex(g2, i, j, igra.getHexColor(i, j));
                 outlineHex(g2, i, j);
             }
         }
@@ -118,13 +120,8 @@ public class Platno extends JPanel implements MouseListener {
 
     public boolean checkTile(final int i, final int j, final int x, final int y) {
         final int[][] p = extremalPoints(i, j);
-        if (new Polygon(p[0], p[1], 6).contains(x, y)) {
-            igra.odigraj(new Koordinati(i, j));
-            // Ne vem, od kje dobit g2
-            // paintHex(g2, p, Player.onTurn);
-            return true;
-        }
-        return false;
+        final var hex = new Polygon(p[0], p[1], 6);
+        return hex.contains(x, y);
     }
 
     @Override
@@ -133,8 +130,10 @@ public class Platno extends JPanel implements MouseListener {
         final int y = e.getY();
         for (int i = 0; i < Igra.size; i++) {
             for (int j = 0; j < Igra.size; j++) {
-                if (checkTile(i, j, x, y))
+                if (checkTile(i, j, x, y)) {
+                    this.repaint(); // TODO: replace with call to runner
                     return;
+                }
             }
         }
     }
