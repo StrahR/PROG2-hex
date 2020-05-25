@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 public class Igra {
 
-    private static Player[][] board;
+    public static Player[][] board;
     public static int size = 11;
 
     private static ArrayList<Koordinati> moves = new ArrayList<Koordinati>();
@@ -55,7 +55,7 @@ public class Igra {
     /**
      * Preveri, ali je poteza slučajno izven plošče.
      */
-    public boolean isValidMove(int x, int y) {
+    public static boolean isValidMove(int x, int y) {
         if (x >= size || x < 0 || y >= size || y < 0)
             return false;
         return true;
@@ -65,7 +65,7 @@ public class Igra {
      * Vrne množico koordinat vseh mogočih potez za igralca, ki je trenutno na
      * potezi
      */
-    public Set<Koordinati> possibleMoves() {
+    public static Set<Koordinati> possibleMoves() {
         Set<Koordinati> moves = new HashSet<Koordinati>();
         for (int x = 0; x < size; x++) {
             for (int y = 0; y < size; y++) {

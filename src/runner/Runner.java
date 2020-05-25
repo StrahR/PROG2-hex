@@ -6,6 +6,8 @@ import gui.Okno;
 import logika.Igra;
 import logika.Player;
 import splosno.Koordinati;
+import AI.Minimax;
+import AI.Naive;
 
 public class Runner {
     public static EnumMap<Player, Player.Type> playerType;
@@ -31,7 +33,8 @@ public class Runner {
                 return;
             case IN_PROGRESS:
                 if (currentPlayerType() == Player.Type.AI) {
-                    // TODO: add AI handling
+                    Koordinati poteza = Minimax.play(igra); 
+                    igra.odigraj(poteza);
                 }
         }
     }
