@@ -16,5 +16,6 @@ public class Naive {
                 return move;
             i++;
         }
+        return new Koordinati(-1, -1);
     }
 }
