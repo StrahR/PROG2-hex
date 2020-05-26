@@ -14,7 +14,7 @@ public class Igra {
     private static ArrayList<Koordinati> moves = new ArrayList<Koordinati>();
 
     public static enum Status {
-        WIN, TIE, IN_PROGRESS;
+        WIN, IN_PROGRESS;
 
         public static Player winner = Player.None;
 
@@ -55,10 +55,12 @@ public class Igra {
     /**
      * Preveri, ali je poteza slučajno izven plošče.
      */
-    public static boolean isValidMove(int x, int y) {
-        if (x >= size || x < 0 || y >= size || y < 0)
-            return false;
-        return true;
+    public static boolean isValidMove(final int x, final int y) {
+        return !(x >= size || x < 0 || y >= size || y < 0);
+    }
+
+    public static boolean isValidMove(final Koordinati p) {
+        return isValidMove(p.getX(), p.getY());
     }
 
     /**

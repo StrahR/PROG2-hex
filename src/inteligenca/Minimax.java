@@ -1,4 +1,4 @@
-package AI;
+package inteligenca;
 
 import logika.Igra;
 import logika.Player;
@@ -13,7 +13,7 @@ public class Minimax {
 
     private static int modified_bfs(Igra igra, Player player, Koordinati origin) {
         int size = Igra.size;
-        
+
         final int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
         final boolean[][] visited = new boolean[size][size];
         for (int i = 0; i < size; i++) {
@@ -39,8 +39,9 @@ public class Minimax {
             for (final int[] s : smeri) {
                 final int x = tmp.getX() + s[0];
                 final int y = tmp.getY() + s[1];
-                if (!Igra.isValidMove(x, y))
+                if (!Igra.isValidMove(x, y)) {
                     continue;
+                }
                 if (!visited[x][y]) {
                     visited[x][y] = true;
 
@@ -66,7 +67,7 @@ public class Minimax {
                 }
             }
         }
-        return INF;  
+        return INF;
     }
 
     /**
@@ -77,11 +78,9 @@ public class Minimax {
             case WIN:
                 if (Igra.Status.winner == player)
                     return INF;
-                else 
+                else
                     return -INF;
-            case TIE:
-                return 0;
-            default:    // case IN_PROGRESS:
+            default: // case IN_PROGRESS:
                 double score = 0;
                 for (int i = 0; i < Igra.size; i++) {
                     int dist_x = modified_bfs(igra, Player.RED, new Koordinati(i, 0));
@@ -89,26 +88,31 @@ public class Minimax {
                     score += (dist_y - dist_x) / (Igra.size + 1.0);
                 }
 
-                if (player == Player.RED)
+                if (player == Player.BLUE) {
+                    return score;
+                } else {
                     return -score;
-                return score;    
-            }
+                }
+        }
     }
 
     private static double alpha_beta(Igra igra, int depth, Player player, double alpha, double beta) {
         // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
-        if (depth == 0 || Igra.status != Igra.Status.IN_PROGRESS)
+        if (depth == 0 || Igra.status != Igra.Status.IN_PROGRESS) {
             return evaluate(igra, player);
-            
+        }
+
         if (Player.onTurn == player) {
             double score = -INF;
             Set<Koordinati> moves = Igra.possibleMoves();
             for (Koordinati move : moves) {
                 igra.odigraj(move);
-                score = Math.max(score, alpha_beta(igra, depth - 1, player, alpha, beta));
-                igra.razveljavi();  
+                score = Math.max(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
+                igra.razveljavi();
                 alpha = Math.max(alpha, score);
-                if (alpha >= beta) break;
+                if (alpha >= beta) {
+                    break;
+                }
             }
             return score;
 
@@ -117,14 +121,15 @@ public class Minimax {
             Set<Koordinati> moves = Igra.possibleMoves();
             for (Koordinati move : moves) {
                 igra.odigraj(move);
-                score = Math.min(score, alpha_beta(igra, depth - 1, player, alpha, beta));
-                igra.razveljavi();  
+                score = Math.min(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
+                igra.razveljavi();
                 beta = Math.min(beta, score);
-                if (alpha >= beta) break;
+                if (alpha >= beta) {
+                    break;
+                }
             }
             return score;
         }
-
     }
 
     /**
@@ -136,7 +141,9 @@ public class Minimax {
         double max_score = -INF;
         Set<Koordinati> moves = Igra.possibleMoves();
         for (Koordinati move : moves) {
-            double score = alpha_beta(igra, depth, Player.onTurn, -INF, INF);
+            igra.odigraj(move);
+            double score = alpha_beta(igra, depth, Player.onTurn.opponent(), -INF, INF);
+            igra.razveljavi();
             if (score > max_score) {
                 max_score = score;
                 best_move = move;

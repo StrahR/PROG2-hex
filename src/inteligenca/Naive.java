@@ -1,4 +1,4 @@
-package AI;
+package inteligenca;
 
 import logika.Igra;
 import splosno.Koordinati;
@@ -11,7 +11,7 @@ public class Naive {
         Set<Koordinati> moves = Igra.possibleMoves();
         int rand_int = new Random().nextInt(moves.size());
         int i = 0;
-        for (Koordinati move: moves) {
+        for (Koordinati move : moves) {
             if (i == rand_int)
                 return move;
             i++;

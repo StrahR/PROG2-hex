@@ -9,8 +9,8 @@ public enum Player {
 
     public static Player onTurn = None;
 
-    public static Player opponent() {
-        switch (onTurn) {
+    public Player opponent() {
+        switch (this) {
             case RED:
                 return BLUE;
             case BLUE:
@@ -21,7 +21,7 @@ public enum Player {
     }
 
     public static void toggleTurn() {
-        onTurn = opponent();
+        onTurn = onTurn.opponent();
     }
 
     @Override

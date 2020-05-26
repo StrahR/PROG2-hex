@@ -15,7 +15,7 @@ import java.util.EnumMap;
 public class Okno extends JFrame implements ActionListener {
 
     private final Platno canvas;
-    private final JLabel status;
+    public final JLabel status;
     private final JButton undo;
 
     private final JMenuItem igraClovekRacunalnik;
@@ -128,16 +128,13 @@ public class Okno extends JFrame implements ActionListener {
             status.setText("Igra ni v teku.");
         } else {
             switch (Igra.status) {
-                case TIE:
-                    status.setText("Neodločeno!");
-                    break;
                 case IN_PROGRESS:
                     status.setText("Na potezi je " + Runner.playerName.get(Player.onTurn) + " - "
                             + Runner.playerType.get(Player.onTurn));
                     break;
                 case WIN:
-                    status.setText("Bravo " + Runner.playerName.get(Player.opponent()) + " - "
-                            + Runner.playerType.get(Player.opponent()));
+                    status.setText("Bravo " + Runner.playerName.get(Player.onTurn.opponent()) + " - "
+                            + Runner.playerType.get(Player.onTurn.opponent()));
                     break;
             }
         }
