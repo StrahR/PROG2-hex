@@ -9,70 +9,10 @@ import java.util.Set;
 
 import java.util.Queue;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.PriorityQueue;
 
 public class Negamax {
     final static int INF = Integer.MAX_VALUE;
-
-    private static int modified_bfs(Igra igra, Player player, Koordinati origin) {
-        int size = Igra.size;
-
-        final int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
-        final boolean[][] settled = new boolean[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                settled[i][j] = false;
-            }
-        }
-        final int[][] distance = new int[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                distance[i][j] = INF;
-            }
-        }
-
-        // BFS
-        Queue<Koordinati> q = new LinkedList<>();
-        distance[origin.getX()][origin.getY()] = 0;
-        settled[origin.getX()][origin.getY()] = true;
-        q.add(origin);
-        while (q.size() > 0) {
-            Koordinati tmp = q.remove();
-
-            for (final int[] s : smeri) {
-                final int x = tmp.getX() + s[0];
-                final int y = tmp.getY() + s[1];
-                if (!Igra.isValidMove(x, y)) {
-                    continue;
-                }
-                if (!settled[x][y]) {
-                    settled[x][y] = true;
-
-                    if (Igra.board[x][y] == Player.None) {
-                        distance[x][y] = Math.min(distance[x][y], distance[tmp.getX()][tmp.getY()] + 1);
-                        q.add(new Koordinati(x, y));
-                    } else if (Igra.board[x][y] == player) {
-                        distance[x][y] = Math.min(distance[x][y], distance[tmp.getX()][tmp.getY()]);
-                        q.add(new Koordinati(x, y));
-                    } else {
-                        distance[x][y] = INF;
-                    }
-
-                    if (player == Player.RED) {
-                        if (y == size - 1 && Igra.board[x][y] != Player.BLUE) {
-                            return distance[x][y];
-                        }
-                    } else {
-                        if (x == size - 1 && Igra.board[x][y] != Player.RED) {
-                            return distance[x][y];
-                        }
-                    }
-                }
-            }
-        }
-        return INF;
-    }
 
     private static int dijkstra(Igra igra, Player player) {
         int size = Igra.size;
@@ -82,7 +22,7 @@ public class Negamax {
         final class Node implements Comparator<Node> {
             Koordinati koord;
             int dist;
-            Node predecessor;
+            // Node predecessor;
             boolean settled;
 
             public Node() {
@@ -138,13 +78,13 @@ public class Negamax {
                     if (Igra.board[x][y] == Player.None) {
                         if (node[x][y].dist > curr.dist + 1) {
                             node[x][y].dist = curr.dist + 1;
-                            node[x][y].predecessor = curr;
+                            // node[x][y].predecessor = curr;
                         }
                         q.add(node[x][y]);
                     } else if (Igra.board[x][y] == player) {
                         if (node[x][y].dist > curr.dist) {
                             node[x][y].dist = curr.dist;
-                            node[x][y].predecessor = curr;
+                            // node[x][y].predecessor = curr;
                         }
                         q.add(node[x][y]);
                     } else {
@@ -180,12 +120,6 @@ public class Negamax {
             default: // case IN_PROGRESS:
                 int score_red = dijkstra(igra, Player.RED);
                 int score_blue = dijkstra(igra, Player.BLUE);
-                // for (int i = 0; i < Igra.size; i++) {
-                // int dist_x = modified_bfs(igra, Player.RED, new Koordinati(i, 0));
-                // int dist_y = modified_bfs(igra, Player.BLUE, new Koordinati(0, i));
-                // score += (dist_x - dist_y) / (10 * Igra.size + 1.0);
-                // }
-
                 return score_blue - score_red;
         }
     }

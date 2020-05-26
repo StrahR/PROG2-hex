@@ -65,14 +65,11 @@ public class Platno extends JPanel implements MouseListener {
     }
 
     private Color getPlayerColor(final Player player) {
-        switch (player) {
-            case RED:
-                return Colour.P1;
-            case BLUE:
-                return Colour.P2;
-            default:
-                return Colour.bg;
-        }
+        return switch (player) {
+            case RED -> Colour.P1;
+            case BLUE -> Colour.P2;
+            case None -> Colour.bg;
+        };
     }
 
     /**

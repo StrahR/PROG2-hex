@@ -128,14 +128,10 @@ public class Okno extends JFrame implements ActionListener {
             status.setText("Igra ni v teku.");
         } else {
             switch (Igra.status) {
-                case IN_PROGRESS:
-                    status.setText("Na potezi je " + Runner.playerName.get(Player.onTurn) + " - "
-                            + Runner.playerType.get(Player.onTurn));
-                    break;
-                case WIN:
-                    status.setText("Bravo " + Runner.playerName.get(Player.onTurn.opponent()) + " - "
-                            + Runner.playerType.get(Player.onTurn.opponent()));
-                    break;
+                case IN_PROGRESS -> status.setText("Na potezi je " + Runner.playerName.get(Player.onTurn) + " - "
+                        + Runner.playerType.get(Player.onTurn));
+                case WIN -> status.setText("Bravo " + Runner.playerName.get(Player.onTurn.opponent()) + " - "
+                        + Runner.playerType.get(Player.onTurn.opponent()));
             }
         }
         canvas.repaint();

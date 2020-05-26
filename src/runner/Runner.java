@@ -9,10 +9,7 @@ import gui.Okno;
 import logika.Igra;
 import logika.Player;
 import splosno.Koordinati;
-import inteligenca.Naive;
-import inteligenca.MTDF;
-import inteligenca.Minimax;
-import inteligenca.Negamax;
+import inteligenca.*;
 
 public class Runner {
     public static EnumMap<Player, Player.Type> playerType;
@@ -32,35 +29,32 @@ public class Runner {
 
     public static void play() {
         okno.refreshGUI();
-        switch (Igra.status) {
-            case WIN:
-                return;
-            case IN_PROGRESS:
-                if (currentPlayerType() == Player.Type.AI) {
-                    SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void>() {
-                        @Override
-                        protected Koordinati doInBackground() {
-                            try {
-                                TimeUnit.MILLISECONDS.sleep(100);
-                            } catch (Exception e) {
-                            }
-                            return MTDF.play(igra);
+        if (Igra.status == Igra.Status.IN_PROGRESS) {
+            if (currentPlayerType() == Player.Type.AI) {
+                SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void>() {
+                    @Override
+                    protected Koordinati doInBackground() {
+                        try {
+                            TimeUnit.MILLISECONDS.sleep(100);
+                        } catch (Exception e) {
                         }
+                        return MTDF.play(igra);
+                    }
 
-                        @Override
-                        protected void done() {
-                            Koordinati poteza = null;
-                            try {
-                                poteza = get();
-                            } catch (Exception e) {
-                                System.out.println(e.toString());
-                            }
-                            igra.odigraj(poteza);
-                            play();
+                    @Override
+                    protected void done() {
+                        Koordinati poteza = null;
+                        try {
+                            poteza = get();
+                        } catch (Exception e) {
+                            System.out.println(e.toString());
                         }
-                    };
-                    worker.execute();
-                }
+                        igra.odigraj(poteza);
+                        play();
+                    }
+                };
+                worker.execute();
+            }
         }
     }
 
