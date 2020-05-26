@@ -84,12 +84,12 @@ public class Minimax {
             default:    // case IN_PROGRESS:
                 double score = 0;
                 for (int i = 0; i < Igra.size; i++) {
-                    int dist_x = modified_bfs(igra, Player.BLUE, new Koordinati(i, 0));
-                    int dist_y = modified_bfs(igra, Player.RED, new Koordinati(0, i));
+                    int dist_x = modified_bfs(igra, Player.RED, new Koordinati(i, 0));
+                    int dist_y = modified_bfs(igra, Player.BLUE, new Koordinati(0, i));
                     score += (dist_y - dist_x) / (Igra.size + 1.0);
                 }
 
-                if (player == Player.BLUE)
+                if (player == Player.RED)
                     return -score;
                 return score;    
             }
@@ -99,7 +99,7 @@ public class Minimax {
         // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
         if (depth == 0 || Igra.status != Igra.Status.IN_PROGRESS)
             return evaluate(igra, player);
-        
+            
         if (Player.onTurn == player) {
             double score = -INF;
             Set<Koordinati> moves = Igra.possibleMoves();
