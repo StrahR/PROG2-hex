@@ -29,7 +29,7 @@ public class Runner {
 
     public static void play() {
         okno.refreshGUI();
-        if (Igra.status == Igra.Status.IN_PROGRESS) {
+        if (igra.status == Igra.Status.IN_PROGRESS) {
             if (currentPlayerType() == Player.Type.AI) {
                 SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void>() {
                     @Override

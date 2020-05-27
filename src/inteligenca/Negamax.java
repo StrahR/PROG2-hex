@@ -75,13 +75,13 @@ public class Negamax {
                     continue;
                 }
                 if (!node[x][y].settled) {
-                    if (Igra.board[x][y] == Player.None) {
+                    if (igra.board[x][y] == Player.None) {
                         if (node[x][y].dist > curr.dist + 1) {
                             node[x][y].dist = curr.dist + 1;
                             // node[x][y].predecessor = curr;
                         }
                         q.add(node[x][y]);
-                    } else if (Igra.board[x][y] == player) {
+                    } else if (igra.board[x][y] == player) {
                         if (node[x][y].dist > curr.dist) {
                             node[x][y].dist = curr.dist;
                             // node[x][y].predecessor = curr;
@@ -111,9 +111,9 @@ public class Negamax {
      * Hevristična funkcija za evaluacijo trenutnega stanja na plošči Red positive
      */
     private static int evaluate(Igra igra) {
-        switch (Igra.status) {
+        switch (igra.status) {
             case WIN:
-                if (Igra.Status.winner == Player.RED)
+                if (igra.status.winner == Player.RED)
                     return INF;
                 else
                     return -INF;
@@ -132,9 +132,9 @@ public class Negamax {
         if (player == Player.BLUE) {
             sign = -1;
         }
-        Set<Koordinati> moves = Igra.possibleMoves();
+        Set<Koordinati> moves = igra.possibleMoves();
 
-        if (depth == 0 || Igra.status != Igra.Status.IN_PROGRESS || moves.isEmpty()) {
+        if (depth == 0 || igra.status != Igra.Status.IN_PROGRESS || moves.isEmpty()) {
             return new Object[] { best_move, sign * evaluate(igra) };
         }
 

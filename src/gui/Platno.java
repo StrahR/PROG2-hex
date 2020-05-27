@@ -107,7 +107,7 @@ public class Platno extends JPanel implements MouseListener {
 
             for (int i = 0; i < Igra.size; i++) {
                 for (int j = 0; j < Igra.size; j++) {
-                    paintHex(g2, i, j, Igra.getHexColor(i, j));
+                    paintHex(g2, i, j, Runner.igra.getHexColor(i, j));
                     outlineHex(g2, i, j);
                 }
             }

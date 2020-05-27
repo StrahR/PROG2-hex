@@ -2,7 +2,6 @@ package gui;
 
 import javax.swing.*;
 
-import logika.Igra;
 import logika.Player;
 import runner.Runner;
 
@@ -127,7 +126,7 @@ public class Okno extends JFrame implements ActionListener {
         if (Runner.igra == null) {
             status.setText("Igra ni v teku.");
         } else {
-            switch (Igra.status) {
+            switch (Runner.igra.status) {
                 case IN_PROGRESS -> status.setText("Na potezi je " + Runner.playerName.get(Player.onTurn) + " - "
                         + Runner.playerType.get(Player.onTurn));
                 case WIN -> status.setText("Bravo " + Runner.playerName.get(Player.onTurn.opponent()) + " - "

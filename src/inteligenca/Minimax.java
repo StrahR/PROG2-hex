@@ -45,10 +45,10 @@ public class Minimax {
                 if (!visited[x][y]) {
                     visited[x][y] = true;
 
-                    if (Igra.board[x][y] == Player.None) {
+                    if (igra.board[x][y] == Player.None) {
                         distance[x][y] = Math.min(distance[x][y], distance[tmp.getX()][tmp.getY()] + 1);
                         q.add(new Koordinati(x, y));
-                    } else if (Igra.board[x][y] == player) {
+                    } else if (igra.board[x][y] == player) {
                         distance[x][y] = Math.min(distance[x][y], distance[tmp.getX()][tmp.getY()]);
                         q.add(new Koordinati(x, y));
                     } else {
@@ -74,9 +74,9 @@ public class Minimax {
      * Hevristična funkcija za evaluacijo trenutnega stanja na plošči
      */
     private static double evaluate(Igra igra, Player player) {
-        switch (Igra.status) {
+        switch (igra.status) {
             case WIN:
-                if (Igra.Status.winner == player)
+                if (igra.status.winner == player)
                     return INF;
                 else
                     return -INF;
@@ -98,13 +98,13 @@ public class Minimax {
 
     private static double alpha_beta(Igra igra, int depth, Player player, double alpha, double beta) {
         // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
-        if (depth == 0 || Igra.status != Igra.Status.IN_PROGRESS) {
+        if (depth == 0 || igra.status != Igra.Status.IN_PROGRESS) {
             return evaluate(igra, player);
         }
 
         if (Player.onTurn == player) {
             double score = -INF;
-            Set<Koordinati> moves = Igra.possibleMoves();
+            Set<Koordinati> moves = igra.possibleMoves();
             for (Koordinati move : moves) {
                 igra.odigraj(move);
                 score = Math.max(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
@@ -118,7 +118,7 @@ public class Minimax {
 
         } else {
             double score = INF;
-            Set<Koordinati> moves = Igra.possibleMoves();
+            Set<Koordinati> moves = igra.possibleMoves();
             for (Koordinati move : moves) {
                 igra.odigraj(move);
                 score = Math.min(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
@@ -139,7 +139,7 @@ public class Minimax {
         int depth = 1;
         Koordinati best_move = new Koordinati(-1, -1);
         double max_score = -INF;
-        Set<Koordinati> moves = Igra.possibleMoves();
+        Set<Koordinati> moves = igra.possibleMoves();
         for (Koordinati move : moves) {
             igra.odigraj(move);
             double score = alpha_beta(igra, depth, Player.onTurn.opponent(), -INF, INF);

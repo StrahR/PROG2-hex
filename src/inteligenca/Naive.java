@@ -8,7 +8,7 @@ import java.util.Set;
 
 public class Naive {
     public static Koordinati play(Igra igra) {
-        Set<Koordinati> moves = Igra.possibleMoves();
+        Set<Koordinati> moves = igra.possibleMoves();
         int rand_int = new Random().nextInt(moves.size());
         int i = 0;
         for (Koordinati move : moves) {
