@@ -38,7 +38,7 @@ public class Runner {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (Exception e) {
                         }
-                        return MTDF.play(igra);
+                        return MCTS.play(igra);
                     }
 
                     @Override
