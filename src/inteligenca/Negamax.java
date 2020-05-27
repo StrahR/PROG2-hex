@@ -43,6 +43,7 @@ public class Negamax {
                 return 0;
             }
         }
+
         final Node[][] node = new Node[size][size];
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {

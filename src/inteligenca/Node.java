@@ -37,5 +37,4 @@ public class Node {
         }
         return value + UCB_factor * Math.sqrt(parent_visits) / (1 + visits);
     }
-
 }
