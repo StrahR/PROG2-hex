@@ -66,10 +66,13 @@ public class Igra {
     }
 
     public Igra(final Igra igra) {
-        // TODO: a je treba deepcopy narest?
-        board = igra.board;
-        past_moves = igra.past_moves;
-        possible_moves = igra.possible_moves;
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                board[i][j] = igra.board[i][j];
+            }
+        }
+        past_moves = new ArrayList<Koordinati>(igra.past_moves);
+        possible_moves = new HashSet<Koordinati>(igra.possible_moves);
         status = igra.status;
         onTurn = igra.onTurn;
 
@@ -167,14 +170,18 @@ public class Igra {
         return true;
     }
 
+    public Koordinati getLastMove() {
+        final int last = past_moves.size() - 1;
+        return past_moves.get(last);
+    }
+
     /**
      * Razveljavi zadnjo potezo.
      */
     public void razveljavi() {
-        final int last = past_moves.size() - 1;
-        final Koordinati p = past_moves.get(last);
+        final Koordinati p = getLastMove();
         board[p.getX()][p.getY()] = Player.None;
-        past_moves.remove(last);
+        past_moves.remove(p);
         possible_moves.add(p);
         toggleTurn();
 
