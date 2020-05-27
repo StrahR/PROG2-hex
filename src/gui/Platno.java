@@ -122,7 +122,7 @@ public class Platno extends JPanel implements MouseListener {
 
     @Override
     public void mouseClicked(final MouseEvent e) {
-        if (Runner.igra != null && Igra.status == Igra.Status.IN_PROGRESS
+        if (Runner.igra != null && Runner.igra.status == Igra.Status.IN_PROGRESS
                 && Runner.currentPlayerType() == Player.Type.HUMAN) {
             final int x = e.getX();
             final int y = e.getY();
