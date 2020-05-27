@@ -8,11 +8,6 @@ import java.util.HashSet;
 
 public class Igra {
 
-    public Player[][] board;
-    public static int size = 11;
-
-    private ArrayList<Koordinati> moves = new ArrayList<Koordinati>();
-
     public enum Status {
         WIN, IN_PROGRESS;
 
@@ -23,12 +18,19 @@ public class Igra {
         }
     }
 
+    public static int size = 11;
+    public Player[][] board;
+    private ArrayList<Koordinati> past_moves = new ArrayList<Koordinati>();
+    public Set<Koordinati> possible_moves = new HashSet<Koordinati>();
     public Status status = Status.IN_PROGRESS;
-
     public Player onTurn = Player.None;
 
     public void toggleTurn() {
         onTurn = onTurn.opponent();
+    }
+
+    public Set<Koordinati> possibleMoves() {
+        return possible_moves;
     }
 
     /**
@@ -39,6 +41,11 @@ public class Igra {
         for (int i = 0; i < size; i++) {
             for (int j = 0; j < size; j++) {
                 board[i][j] = Player.None;
+            }
+        }
+        for (int x = 0; x < size; x++) {
+            for (int y = 0; y < size; y++) {
+                possible_moves.add(new Koordinati(x, y));
             }
         }
     }
@@ -61,8 +68,11 @@ public class Igra {
     public Igra(final Igra igra) {
         // TODO: a je treba deepcopy narest?
         board = igra.board;
-        moves = igra.moves;
+        past_moves = igra.past_moves;
+        possible_moves = igra.possible_moves;
         status = igra.status;
+        onTurn = igra.onTurn;
+
     }
 
     /**
@@ -74,21 +84,6 @@ public class Igra {
 
     public static boolean isValidMove(final Koordinati p) {
         return isValidMove(p.getX(), p.getY());
-    }
-
-    /**
-     * Vrne množico koordinat vseh mogočih potez za igralca, ki je trenutno na
-     * potezi
-     */
-    public Set<Koordinati> possibleMoves() {
-        Set<Koordinati> moves = new HashSet<Koordinati>();
-        for (int x = 0; x < size; x++) {
-            for (int y = 0; y < size; y++) {
-                if (board[x][y] == Player.None)
-                    moves.add(new Koordinati(x, y));
-            }
-        }
-        return moves;
     }
 
     public boolean checkWin(Koordinati p) {
@@ -161,7 +156,8 @@ public class Igra {
             return false;
         if (board[p.getX()][p.getY()] != Player.None)
             return false;
-        moves.add(p);
+        past_moves.add(p);
+        possible_moves.remove(p);
         board[p.getX()][p.getY()] = onTurn;
         if (checkWin(p)) {
             status = Status.WIN;
@@ -175,10 +171,11 @@ public class Igra {
      * Razveljavi zadnjo potezo.
      */
     public void razveljavi() {
-        final int last = moves.size() - 1;
-        final Koordinati p = moves.get(last);
+        final int last = past_moves.size() - 1;
+        final Koordinati p = past_moves.get(last);
         board[p.getX()][p.getY()] = Player.None;
-        moves.remove(last);
+        past_moves.remove(last);
+        possible_moves.add(p);
         toggleTurn();
 
         // we can only make a move when game is in progress
