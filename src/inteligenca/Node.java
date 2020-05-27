@@ -9,7 +9,7 @@ import java.util.Set;
 public class Node {
     public Igra igra;
     public Node parent;
-    public Set<Node> children = new HashSet<Node>(); 
+    public Set<Node> children = new HashSet<Node>();
     public double prior_probability;
     public double value;
     public int visits;
@@ -20,6 +20,7 @@ public class Node {
         this.parent = parent;
         this.prior_probability = prior_probability;
         visits = 0;
+        UCB_factor = 2;
     }
 
     public void update_value(double outcome) {
@@ -31,9 +32,10 @@ public class Node {
      * UCB formula za score
      */
     public double UCB_score(int parent_visits, Player player) {
-        // TODO: ce je player nasprotnik zamenjas value z (1 - value)
-        return value + UCB_factor * Math.sqrt(parent_visits)/(1+visits);
+        if (player != igra.onTurn) {
+            return (1 - value) + UCB_factor * Math.sqrt(parent_visits) / (1 + visits);
+        }
+        return value + UCB_factor * Math.sqrt(parent_visits) / (1 + visits);
     }
-
 
 }
