@@ -7,20 +7,23 @@ import inteligenca.Node;
 import inteligenca.Naive;
 
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Random;
 
 public class MCTS {
     final static int INF = Integer.MAX_VALUE;
 
-    private final Player player;
+    private static Player player;
+    private static Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
 
     public MCTS(Player player) {
-        this.player = player;
+        MCTS.player = player;
     }
 
-    private Node select_favorite_child(Node parent) {
+    private static Node selectFavouriteChild(Node parent) {
         Set<Node> children = parent.children;
-        Node favorite_child;
+        Node favorite_child = null;
         double max_score = -INF;
         for (Node child : children) {
             if (child.UCB_score(parent.visits, player) > max_score) {
@@ -31,16 +34,17 @@ public class MCTS {
         return favorite_child;
     }
 
-    private Node expand(Node parent) {
+    private static Node expand(Node parent) {
         for (Koordinati move : parent.igra.possibleMoves()) {
             Igra igra = new Igra(parent.igra);
             igra.odigraj(move);
             parent.children.add(new Node(igra, parent, parent.prior_probability));
         }
+        visited_nodes.put(parent.igra, parent);
         return parent;
     }
 
-    private double simulate(Node child) {
+    private static double simulate(Node child) {
         Igra igra = new Igra(child.igra);
         while (igra.status == Igra.Status.IN_PROGRESS) {
             Koordinati move = Naive.play(igra);
@@ -52,7 +56,7 @@ public class MCTS {
         return -1;
     }
 
-    private void backprop(Node selected, Node root, double outcome) {
+    private static void backprop(Node selected, Node root, double outcome) {
         Node current = selected.parent;
         while (current != root) {
             current.update_value(outcome);
@@ -61,13 +65,13 @@ public class MCTS {
         root.update_value(outcome);
     }
 
-    private void search(Node root) {
+    private static void search(Node root) {
         double outcome = 0;
         Node selected = root;
         Set<Koordinati> moves = selected.igra.possibleMoves();
         // mogoce rabimo met max depth?
         while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
-            selected = select_favorite_child(selected);
+            selected = selectFavouriteChild(selected);
             moves = selected.igra.possibleMoves();
         }
         switch (selected.igra.status) {
@@ -89,5 +93,19 @@ public class MCTS {
                 }
         }
         backprop(selected, root, outcome);
+    }
+
+    public static Koordinati play(Igra igra) {
+        Node origin;
+        if (visited_nodes.containsKey(igra)) {
+            origin = visited_nodes.get(igra);
+        } else {
+            origin = new Node(igra, null, 0);
+            origin = expand(origin);
+            origin.value = simulate(origin);
+        }
+        search(origin);
+        Koordinati move = selectFavouriteChild(origin).igra.getLastMove();
+        return move;
     }
 }
