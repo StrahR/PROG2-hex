@@ -1,7 +1,6 @@
 package inteligenca;
 
 import logika.Igra;
-import logika.Player;
 import splosno.Koordinati;
 
 import java.util.AbstractMap;
@@ -15,7 +14,7 @@ public class MTDF extends Negamax {
 
         while (lower_bound < upper_bound) {
             int beta = Math.max(g, lower_bound + 1);
-            Object[] ab = alpha_beta(igra, depth, Player.onTurn, beta - 1, beta);
+            Object[] ab = alpha_beta(igra, depth, igra.onTurn, beta - 1, beta);
             move = (Koordinati) ab[0];
             g = (int) ab[1];
             if (g < beta) {

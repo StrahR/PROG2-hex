@@ -19,7 +19,7 @@ public class Runner {
     public static Igra igra;
 
     public static Player.Type currentPlayerType() {
-        return playerType.get(Player.onTurn);
+        return playerType.get(igra.onTurn);
     }
 
     public static void newGame() {

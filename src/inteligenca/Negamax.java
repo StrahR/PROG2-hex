@@ -165,6 +165,6 @@ public class Negamax {
     public static Koordinati play(Igra igra) {
         int depth = 7;
         Runner.okno.status.setText(String.valueOf(evaluate(igra)));
-        return (Koordinati) alpha_beta(igra, depth, Player.onTurn, -INF, INF)[0];
+        return (Koordinati) alpha_beta(igra, depth, igra.onTurn, -INF, INF)[0];
     }
 }

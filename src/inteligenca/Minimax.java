@@ -102,7 +102,7 @@ public class Minimax {
             return evaluate(igra, player);
         }
 
-        if (Player.onTurn == player) {
+        if (igra.onTurn == player) {
             double score = -INF;
             Set<Koordinati> moves = igra.possibleMoves();
             for (Koordinati move : moves) {
@@ -142,7 +142,7 @@ public class Minimax {
         Set<Koordinati> moves = igra.possibleMoves();
         for (Koordinati move : moves) {
             igra.odigraj(move);
-            double score = alpha_beta(igra, depth, Player.onTurn.opponent(), -INF, INF);
+            double score = alpha_beta(igra, depth, igra.onTurn.opponent(), -INF, INF);
             igra.razveljavi();
             if (score > max_score) {
                 max_score = score;

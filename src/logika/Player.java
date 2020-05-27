@@ -7,18 +7,12 @@ public enum Player {
         HUMAN, AI, None;
     }
 
-    public static Player onTurn = None;
-
     public Player opponent() {
         return switch (this) {
             case RED -> BLUE;
             case BLUE -> RED;
             default -> None;
         };
-    }
-
-    public static void toggleTurn() {
-        onTurn = onTurn.opponent();
     }
 
     @Override

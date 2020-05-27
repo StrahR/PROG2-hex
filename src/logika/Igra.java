@@ -25,6 +25,12 @@ public class Igra {
 
     public Status status = Status.IN_PROGRESS;
 
+    public Player onTurn = Player.None;
+
+    public void toggleTurn() {
+        onTurn = onTurn.opponent();
+    }
+
     /**
      * Izprazni igralno ploščo
      */
@@ -39,7 +45,7 @@ public class Igra {
 
     public Igra() {
         emptyBoard();
-        Player.onTurn = Player.RED;
+        onTurn = Player.RED;
         status = Status.IN_PROGRESS;
         status.winner = Player.None;
     }
@@ -47,7 +53,7 @@ public class Igra {
     public Igra(final int n) {
         size = n;
         emptyBoard();
-        Player.onTurn = Player.RED;
+        onTurn = Player.RED;
         status = Status.IN_PROGRESS;
         status.winner = Player.None;
     }
@@ -132,7 +138,7 @@ public class Igra {
                 final int dy = s[1];
                 if (!isValidMove(x + dx, y + dy))
                     continue;
-                if (board[x + dx][y + dy] == Player.onTurn && !visited[x + dx][y + dy]) {
+                if (board[x + dx][y + dy] == onTurn && !visited[x + dx][y + dy]) {
                     stack.add(new Koordinati(x + dx, y + dy));
                 }
             }
@@ -156,12 +162,12 @@ public class Igra {
         if (board[p.getX()][p.getY()] != Player.None)
             return false;
         moves.add(p);
-        board[p.getX()][p.getY()] = Player.onTurn;
+        board[p.getX()][p.getY()] = onTurn;
         if (checkWin(p)) {
             status = Status.WIN;
-            status.setWinner(Player.onTurn);
+            status.setWinner(onTurn);
         }
-        Player.toggleTurn();
+        toggleTurn();
         return true;
     }
 
@@ -173,7 +179,7 @@ public class Igra {
         final Koordinati p = moves.get(last);
         board[p.getX()][p.getY()] = Player.None;
         moves.remove(last);
-        Player.toggleTurn();
+        toggleTurn();
 
         // we can only make a move when game is in progress
         status = Status.IN_PROGRESS;
