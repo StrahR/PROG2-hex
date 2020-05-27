@@ -13,6 +13,7 @@ import java.util.Random;
 
 public class MCTS {
     final static int INF = Integer.MAX_VALUE;
+    final static int TIME_LIMIT = 1000;
 
     private static Player player;
     private static Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
@@ -66,33 +67,40 @@ public class MCTS {
     }
 
     private static void search(Node root) {
+        long start = System.currentTimeMillis();
         double outcome = 0;
         Node selected = root;
         Set<Koordinati> moves = selected.igra.possibleMoves();
-        // mogoce rabimo met max depth?
-        while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
-            selected = selectFavouriteChild(selected);
-            moves = selected.igra.possibleMoves();
-        }
-        switch (selected.igra.status) {
-            case WIN:
-                if (selected.igra.status.winner == player)
-                    outcome = 1;
-                else
-                    outcome = -1;
-            default: // case IN_PROGRESS:
-                selected = expand(selected);
-                int rand_int = new Random().nextInt(moves.size());
-                int i = 0;
-                for (Node child : selected.children) {
-                    if (i == rand_int) {
-                        outcome = simulate(child);
-                        break;
+        while (System.currentTimeMillis() - start < TIME_LIMIT) {
+            System.out.println(visited_nodes.size());
+            while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
+                selected = selectFavouriteChild(selected);
+                moves = selected.igra.possibleMoves();
+            }
+            switch (selected.igra.status) {
+                case WIN:
+                    if (selected.igra.status.winner == player)
+                        outcome = 1;
+                    else
+                        outcome = -1;
+                default: // case IN_PROGRESS:
+                    selected = expand(selected);
+                    int rand_int = new Random().nextInt(moves.size());
+                    int i = 0;
+                    for (Node child : selected.children) {
+                        if (i == rand_int) {
+
+                            for (int j = 0; j < 1000; j++) {
+                                outcome += simulate(child);
+                            }
+                            outcome /= 1000;
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
-                }
+            }
+            backprop(selected, root, outcome);
         }
-        backprop(selected, root, outcome);
     }
 
     public static Koordinati play(Igra igra) {
