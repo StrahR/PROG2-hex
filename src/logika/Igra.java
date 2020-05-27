@@ -52,6 +52,13 @@ public class Igra {
         status.winner = Player.None;
     }
 
+    public Igra(final Igra igra) {
+        // TODO: a je treba deepcopy narest?
+        board = igra.board;
+        moves = igra.moves;
+        status = igra.status;
+    }
+
     /**
      * Preveri, ali je poteza slučajno izven plošče.
      */
