@@ -20,6 +20,8 @@ public class Runner {
     public static int size = 5;
     public static MCTS tree = null;
 
+    private static SwingWorker<Koordinati, Void> worker = null;
+
     public static Player.Type currentPlayerType() {
         return playerType.get(igra.onTurn);
     }
@@ -33,7 +35,7 @@ public class Runner {
         okno.refreshGUI();
         if (igra.status == Igra.Status.IN_PROGRESS) {
             if (currentPlayerType() == Player.Type.AI) {
-                SwingWorker<Koordinati, Void> worker = new SwingWorker<Koordinati, Void>() {
+                worker = new SwingWorker<Koordinati, Void>() {
                     @Override
                     protected Koordinati doInBackground() {
                         try {
@@ -52,7 +54,7 @@ public class Runner {
                         try {
                             poteza = get();
                         } catch (Exception e) {
-                            e.printStackTrace();
+                            return;
                         }
                         igra.odigraj(poteza);
                         play();
@@ -69,6 +71,9 @@ public class Runner {
     }
 
     public static void undo() {
+        if (worker != null) {
+            worker.cancel(false);
+        }
         igra.razveljavi();
         play();
     }
