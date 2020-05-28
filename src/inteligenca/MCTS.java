@@ -13,14 +13,14 @@ public class MCTS {
     final static int INF = Integer.MAX_VALUE;
     final static int TIME_LIMIT = 5000;
 
-    private static Player player;
-    private static Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
+    private Player player;
+    private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
 
     public MCTS(Player player) {
-        MCTS.player = player;
+        this.player = player;
     }
 
-    private static Node selectFavouriteChild(Node parent) {
+    private Node selectFavouriteChild(Node parent) {
         Set<Node> children = parent.children;
         Node favorite_child = null;
         double max_score = -INF;
@@ -34,7 +34,7 @@ public class MCTS {
         return favorite_child;
     }
 
-    private static Node expand(Node parent) {
+    private Node expand(Node parent) {
         int i = 0;
         for (Koordinati move : parent.igra.possibleMoves()) {
             if (i > 10) {
@@ -48,7 +48,7 @@ public class MCTS {
         return parent;
     }
 
-    private static int simulate(Node child) {
+    private int simulate(Node child) {
         Igra igra = new Igra(child.igra);
         while (igra.status == Igra.Status.IN_PROGRESS) {
             Koordinati move = Naive.play(igra);
@@ -60,8 +60,8 @@ public class MCTS {
         return -1;
     }
 
-    private static void backprop(Node selected, Node root, double outcome) {
-        Node current = selected.parent;
+    private void backprop(Node selected, Node root, double outcome) {
+        Node current = selected;
         while (current != root) {
             current.update_value(outcome);
             current = current.parent;
@@ -69,7 +69,7 @@ public class MCTS {
         root.update_value(outcome);
     }
 
-    private static void search(Node root) {
+    private void search(Node root) {
         long start = System.currentTimeMillis();
         double outcome = 0;
         Node selected = root;
@@ -104,7 +104,7 @@ public class MCTS {
         }
     }
 
-    public static Koordinati play(Igra igra) {
+    public Koordinati play(Igra igra) {
         Node origin;
         if (visited_nodes.containsKey(igra)) {
             origin = visited_nodes.get(igra);
