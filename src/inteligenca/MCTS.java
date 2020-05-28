@@ -35,20 +35,19 @@ public class MCTS {
     }
 
     private Node expand(Node parent) {
-        int i = 0;
         for (Koordinati move : parent.igra.possibleMoves()) {
-            if (i > 10) {
-                break;
-            }
             Igra igra = new Igra(parent.igra);
             igra.odigraj(move);
-            parent.children.add(new Node(igra, parent, parent.prior_probability));
+            Node child = new Node(igra, parent, parent.prior_probability);
+            child.value = simulate(child);
+            parent.children.add(child);
         }
         visited_nodes.put(parent.igra, parent);
         return parent;
     }
 
     private int simulate(Node child) {
+        child.visits++;
         Igra igra = new Igra(child.igra);
         while (igra.status == Igra.Status.IN_PROGRESS) {
             Koordinati move = Naive.play(igra);
@@ -71,10 +70,14 @@ public class MCTS {
 
     private void search(Node root) {
         long start = System.currentTimeMillis();
-        double outcome = 0;
-        Node selected = root;
-        Set<Koordinati> moves = selected.igra.possibleMoves();
+        int j = 0;
+        int k = 0;
+        Node prev = null;
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
+            double outcome = 0;
+            Node selected = root;
+            Set<Koordinati> moves = selected.igra.possibleMoves();
+            j++;
             // System.out.println(visited_nodes.size());
             // System.out.println(System.currentTimeMillis() - start);
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
@@ -83,6 +86,10 @@ public class MCTS {
             }
             switch (selected.igra.status) {
                 case WIN:
+                    if (prev == selected) {
+                        k++;
+                    }
+                    prev = selected;
                     if (selected.igra.status.winner == player)
                         outcome = 1;
                     else
@@ -102,6 +109,8 @@ public class MCTS {
             }
             backprop(selected, root, outcome);
         }
+        System.out.println("Iterations: " + j);
+        System.out.println("Same terminal: " + k);
     }
 
     public Koordinati play(Igra igra) {
@@ -110,8 +119,8 @@ public class MCTS {
             origin = visited_nodes.get(igra);
         } else {
             origin = new Node(igra, null, 0);
-            origin = expand(origin);
             origin.value = simulate(origin);
+            origin = expand(origin);
         }
         search(origin);
         Koordinati move = selectFavouriteChild(origin).igra.getLastMove();

@@ -32,6 +32,7 @@ public class Node {
      * UCB formula za score
      */
     public double UCB_score(int parent_visits, Player player) {
+        System.out.println(visits);
         if (player != igra.onTurn) {
             return (1 - value) + UCB_factor * Math.sqrt(Math.log(1 + parent_visits) / (1e-6 + visits));
         }
