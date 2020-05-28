@@ -172,8 +172,11 @@ public class Igra {
     }
 
     public Koordinati getLastMove() {
-        final int last = past_moves.size() - 1;
-        return past_moves.get(last);
+        if (past_moves.isEmpty()) {
+            return null;
+        } else {
+            return past_moves.get(past_moves.size() - 1);
+        }
     }
 
     /**
@@ -181,14 +184,16 @@ public class Igra {
      */
     public void razveljavi() {
         final Koordinati p = getLastMove();
-        board[p.getX()][p.getY()] = Player.None;
-        past_moves.remove(p);
-        possible_moves.add(p);
-        toggleTurn();
+        if (p != null) {
+            board[p.getX()][p.getY()] = Player.None;
+            past_moves.remove(p);
+            possible_moves.add(p);
+            toggleTurn();
 
-        // we can only make a move when game is in progress
-        status = Status.IN_PROGRESS;
-        status.winner = Player.None;
+            // we can only make a move when game is in progress
+            status = Status.IN_PROGRESS;
+            status.winner = Player.None;
+        }
     }
 
     @Override

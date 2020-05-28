@@ -16,14 +16,15 @@ public class Runner {
     public static EnumMap<Player, String> playerName;
 
     public static Okno okno;
-    public static Igra igra;
+    public static Igra igra = null;
+    public static int size = 5;
 
     public static Player.Type currentPlayerType() {
         return playerType.get(igra.onTurn);
     }
 
     public static void newGame() {
-        igra = new Igra(5);
+        igra = new Igra(size);
         play();
     }
 
@@ -47,7 +48,7 @@ public class Runner {
                         try {
                             poteza = get();
                         } catch (Exception e) {
-                            System.out.println(e.toString());
+                            e.printStackTrace();
                         }
                         igra.odigraj(poteza);
                         play();

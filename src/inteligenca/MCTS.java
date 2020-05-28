@@ -3,8 +3,6 @@ package inteligenca;
 import logika.Igra;
 import logika.Player;
 import splosno.Koordinati;
-import inteligenca.Node;
-import inteligenca.Naive;
 
 import java.util.Set;
 import java.util.Map;
@@ -13,7 +11,7 @@ import java.util.Random;
 
 public class MCTS {
     final static int INF = Integer.MAX_VALUE;
-    final static int TIME_LIMIT = 1000;
+    final static int TIME_LIMIT = 5000;
 
     private static Player player;
     private static Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
@@ -27,8 +25,9 @@ public class MCTS {
         Node favorite_child = null;
         double max_score = -INF;
         for (Node child : children) {
-            if (child.UCB_score(parent.visits, player) > max_score) {
-                max_score = child.UCB_score(parent.visits, player);
+            double v = child.UCB_score(parent.visits, player);
+            if (v > max_score) {
+                max_score = v;
                 favorite_child = child;
             }
         }
@@ -36,7 +35,11 @@ public class MCTS {
     }
 
     private static Node expand(Node parent) {
+        int i = 0;
         for (Koordinati move : parent.igra.possibleMoves()) {
+            if (i > 10) {
+                break;
+            }
             Igra igra = new Igra(parent.igra);
             igra.odigraj(move);
             parent.children.add(new Node(igra, parent, parent.prior_probability));
@@ -45,7 +48,7 @@ public class MCTS {
         return parent;
     }
 
-    private static double simulate(Node child) {
+    private static int simulate(Node child) {
         Igra igra = new Igra(child.igra);
         while (igra.status == Igra.Status.IN_PROGRESS) {
             Koordinati move = Naive.play(igra);
@@ -72,7 +75,8 @@ public class MCTS {
         Node selected = root;
         Set<Koordinati> moves = selected.igra.possibleMoves();
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
-            System.out.println(visited_nodes.size());
+            // System.out.println(visited_nodes.size());
+            // System.out.println(System.currentTimeMillis() - start);
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
                 selected = selectFavouriteChild(selected);
                 moves = selected.igra.possibleMoves();
@@ -83,17 +87,14 @@ public class MCTS {
                         outcome = 1;
                     else
                         outcome = -1;
+                    break;
                 default: // case IN_PROGRESS:
                     selected = expand(selected);
                     int rand_int = new Random().nextInt(moves.size());
                     int i = 0;
                     for (Node child : selected.children) {
                         if (i == rand_int) {
-
-                            for (int j = 0; j < 1000; j++) {
-                                outcome += simulate(child);
-                            }
-                            outcome /= 1000;
+                            outcome = simulate(child);
                             break;
                         }
                         i++;

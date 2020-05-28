@@ -33,8 +33,8 @@ public class Node {
      */
     public double UCB_score(int parent_visits, Player player) {
         if (player != igra.onTurn) {
-            return (1 - value) + UCB_factor * Math.sqrt(parent_visits) / (1 + visits);
+            return (1 - value) + UCB_factor * Math.sqrt(Math.log(1 + parent_visits) / (1e-6 + visits));
         }
-        return value + UCB_factor * Math.sqrt(parent_visits) / (1 + visits);
+        return value + UCB_factor * Math.sqrt(Math.log(1 + parent_visits) / (1e-6 + visits));
     }
 }
