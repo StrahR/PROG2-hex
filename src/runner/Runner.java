@@ -18,6 +18,7 @@ public class Runner {
     public static Okno okno;
     public static Igra igra = null;
     public static int size = 5;
+    public static MCTS tree = null;
 
     public static Player.Type currentPlayerType() {
         return playerType.get(igra.onTurn);
@@ -39,7 +40,10 @@ public class Runner {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (Exception e) {
                         }
-                        return MCTS.play(igra);
+                        if (tree == null) {
+                            tree = new MCTS(igra.onTurn);
+                        }
+                        return tree.play(igra);
                     }
 
                     @Override
