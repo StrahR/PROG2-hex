@@ -22,6 +22,13 @@ public class Okno extends JFrame implements ActionListener {
     private final JMenuItem igraClovekClovek;
     private final JMenuItem igraRacunalnikRacunalnik;
 
+    private final JMenuItem size05;
+    private final JMenuItem size07;
+    private final JMenuItem size09;
+    private final JMenuItem size11;
+    private final JMenuItem size13;
+    private final JMenuItem size15;
+
     public Okno(final String name, final Platno canvas) {
         this.setTitle(name);
         this.canvas = canvas;
@@ -34,6 +41,8 @@ public class Okno extends JFrame implements ActionListener {
         this.setJMenuBar(menu_bar);
         final JMenu igra_menu = new JMenu("Nova igra");
         menu_bar.add(igra_menu);
+        final JMenu velikost_menu = new JMenu("Velikost igre");
+        menu_bar.add(velikost_menu);
 
         igraClovekRacunalnik = new JMenuItem("Človek – računalnik");
         igra_menu.add(igraClovekRacunalnik);
@@ -50,6 +59,30 @@ public class Okno extends JFrame implements ActionListener {
         igraRacunalnikRacunalnik = new JMenuItem("Računalnik – računalnik");
         igra_menu.add(igraRacunalnikRacunalnik);
         igraRacunalnikRacunalnik.addActionListener(this);
+
+        size05 = new JMenuItem("5x5");
+        velikost_menu.add(size05);
+        size05.addActionListener(this);
+
+        size07 = new JMenuItem("7x7");
+        velikost_menu.add(size07);
+        size07.addActionListener(this);
+
+        size09 = new JMenuItem("9x9");
+        velikost_menu.add(size09);
+        size09.addActionListener(this);
+
+        size11 = new JMenuItem("11x11");
+        velikost_menu.add(size11);
+        size11.addActionListener(this);
+
+        size13 = new JMenuItem("13x13");
+        velikost_menu.add(size13);
+        size13.addActionListener(this);
+
+        size15 = new JMenuItem("15x15");
+        velikost_menu.add(size15);
+        size15.addActionListener(this);
 
         this.setLayout(new GridBagLayout());
 
@@ -118,6 +151,36 @@ public class Okno extends JFrame implements ActionListener {
         } else if (e.getSource() == undo) {
             if (Runner.igra != null) {
                 Runner.undo();
+            }
+        } else if (e.getSource() == size05) {
+            Runner.size = 5;
+            if (Runner.igra != null) {
+                Runner.newGame();
+            }
+        } else if (e.getSource() == size07) {
+            Runner.size = 7;
+            if (Runner.igra != null) {
+                Runner.newGame();
+            }
+        } else if (e.getSource() == size09) {
+            Runner.size = 9;
+            if (Runner.igra != null) {
+                Runner.newGame();
+            }
+        } else if (e.getSource() == size11) {
+            Runner.size = 11;
+            if (Runner.igra != null) {
+                Runner.newGame();
+            }
+        } else if (e.getSource() == size13) {
+            Runner.size = 13;
+            if (Runner.igra != null) {
+                Runner.newGame();
+            }
+        } else if (e.getSource() == size15) {
+            Runner.size = 15;
+            if (Runner.igra != null) {
+                Runner.newGame();
             }
         }
     }
