@@ -11,7 +11,7 @@ import java.util.Random;
 
 public class MCTS {
     final static int INF = Integer.MAX_VALUE;
-    final static int TIME_LIMIT = 5000;
+    final static int TIME_LIMIT = 750;
 
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
@@ -25,7 +25,7 @@ public class MCTS {
         Node favorite_child = null;
         double max_score = -INF;
         for (Node child : children) {
-            double v = child.UCB_score(parent.visits, player);
+            double v = child.UCB_score(player);
             if (v > max_score) {
                 max_score = v;
                 favorite_child = child;
@@ -34,16 +34,17 @@ public class MCTS {
         return favorite_child;
     }
 
-    private Node expand(Node parent) {
+    private void expand(Node parent) {
         for (Koordinati move : parent.igra.possibleMoves()) {
             Igra igra = new Igra(parent.igra);
             igra.odigraj(move);
-            Node child = new Node(igra, parent, parent.prior_probability);
-            child.value = simulate(child);
-            parent.children.add(child);
+            if (!visited_nodes.containsKey(igra)) {
+                Node child = new Node(igra, parent, parent.player.opponent(), move);
+                // child.value = simulate(child);
+                parent.children.add(child);
+                visited_nodes.put(child.igra, child);
+            }
         }
-        visited_nodes.put(parent.igra, parent);
-        return parent;
     }
 
     private int simulate(Node child) {
@@ -62,22 +63,22 @@ public class MCTS {
     private void backprop(Node selected, Node root, double outcome) {
         Node current = selected;
         while (current != root) {
-            current.update_value(outcome);
+            current.update_value(outcome, player);
             current = current.parent;
         }
-        root.update_value(outcome);
+        root.update_value(outcome, player);
     }
 
     private void search(Node root) {
         long start = System.currentTimeMillis();
-        int j = 0;
-        int k = 0;
-        Node prev = null;
+        // int j = 0;
+        // int k = 0;
+        // Node prev = null;
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
             double outcome = 0;
             Node selected = root;
             Set<Koordinati> moves = selected.igra.possibleMoves();
-            j++;
+            // j++;
             // System.out.println(visited_nodes.size());
             // System.out.println(System.currentTimeMillis() - start);
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
@@ -86,17 +87,17 @@ public class MCTS {
             }
             switch (selected.igra.status) {
                 case WIN:
-                    if (prev == selected) {
-                        k++;
-                    }
-                    prev = selected;
+                    // if (prev == selected) {
+                    // k++;
+                    // }
+                    // prev = selected;
                     if (selected.igra.status.winner == player)
-                        outcome = 1;
+                        outcome = 100;
                     else
-                        outcome = -1;
+                        outcome = -100;
                     break;
                 default: // case IN_PROGRESS:
-                    selected = expand(selected);
+                    expand(selected);
                     int rand_int = new Random().nextInt(moves.size());
                     int i = 0;
                     for (Node child : selected.children) {
@@ -109,21 +110,39 @@ public class MCTS {
             }
             backprop(selected, root, outcome);
         }
-        System.out.println("Iterations: " + j);
-        System.out.println("Same terminal: " + k);
+        // System.out.println("Iterations: " + j);
+        // System.out.println("Same terminal: " + k);
     }
 
     public Koordinati play(Igra igra) {
+        this.player = igra.onTurn;
+
         Node origin;
         if (visited_nodes.containsKey(igra)) {
             origin = visited_nodes.get(igra);
+            origin.parent = null;
         } else {
-            origin = new Node(igra, null, 0);
+            origin = new Node(igra, null, igra.onTurn, null);
             origin.value = simulate(origin);
-            origin = expand(origin);
+            expand(origin);
+            // visited_nodes.put(igra, origin);
         }
         search(origin);
-        Koordinati move = selectFavouriteChild(origin).igra.getLastMove();
+
+        Set<Node> children = origin.children;
+        Node best = null;
+        double max_score = -INF;
+        for (Node child : children) {
+            if (child.visits == 0) {
+                continue;
+            }
+            double v = child.value;
+            if (v > max_score) {
+                max_score = v;
+                best = child;
+            }
+        }
+        Koordinati move = best.move;
         return move;
     }
 }
