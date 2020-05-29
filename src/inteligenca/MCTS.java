@@ -11,13 +11,12 @@ import java.util.Random;
 
 public class MCTS {
     final static int INF = Integer.MAX_VALUE;
-    final static int TIME_LIMIT = 750;
+    final static int TIME_LIMIT = 3000;
 
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
 
-    public MCTS(Player player) {
-        this.player = player;
+    public MCTS() {
     }
 
     private Node selectFavouriteChild(Node parent) {
@@ -92,9 +91,9 @@ public class MCTS {
                     // }
                     // prev = selected;
                     if (selected.igra.status.winner == player)
-                        outcome = 100;
+                        outcome = 100000;
                     else
-                        outcome = -100;
+                        outcome = -100000;
                     break;
                 default: // case IN_PROGRESS:
                     expand(selected);
