@@ -56,6 +56,7 @@ public class Runner {
                         } catch (Exception e) {
                             return;
                         }
+                        System.out.println("test4");
                         igra.odigraj(poteza);
                         play();
                     }

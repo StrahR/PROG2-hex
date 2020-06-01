@@ -2,6 +2,7 @@ package inteligenca;
 
 import logika.Igra;
 import logika.Player;
+import logika.Simulator;
 import splosno.Koordinati;
 
 import java.util.Set;
@@ -49,15 +50,11 @@ public class MCTS {
 
     private int simulate(Node child) {
         child.visits++;
-        Igra igra = new Igra(child.igra);
-        while (igra.status == Igra.Status.IN_PROGRESS) {
-            Koordinati move = Naive.play(igra);
-            igra.odigraj(move);
+        Player winner = Simulator.simulate(child.igra);
+        if (winner == player) {
+            return 100;
         }
-        if (igra.status.winner == player) {
-            return 1;
-        }
-        return -1;
+        return -100;
     }
 
     private void backprop(Node selected, Node root, double outcome) {
@@ -71,26 +68,16 @@ public class MCTS {
 
     private void search(Node root) {
         long start = System.currentTimeMillis();
-        // int j = 0;
-        // int k = 0;
-        // Node prev = null;
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
             double outcome = 0;
             Node selected = root;
             Set<Koordinati> moves = selected.igra.possibleMoves();
-            // j++;
-            // System.out.println(visited_nodes.size());
-            // System.out.println(System.currentTimeMillis() - start);
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
                 selected = selectFavouriteChild(selected);
                 moves = selected.igra.possibleMoves();
             }
             switch (selected.igra.status) {
                 case WIN:
-                    // if (prev == selected) {
-                    // k++;
-                    // }
-                    // prev = selected;
                     if (selected.igra.status.winner == player)
                         outcome = 100;
                     else
@@ -110,8 +97,6 @@ public class MCTS {
             }
             backprop(selected, root, outcome);
         }
-        // System.out.println("Iterations: " + j);
-        // System.out.println("Same terminal: " + k);
     }
 
     public Koordinati play(Igra igra) {
