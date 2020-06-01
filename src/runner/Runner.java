@@ -17,7 +17,7 @@ public class Runner {
 
     public static Okno okno;
     public static Igra igra = null;
-    public static int size = 5;
+    public static int size = 11;
     public static MCTS tree = null;
 
     private static SwingWorker<Koordinati, Void> worker = null;
@@ -56,7 +56,7 @@ public class Runner {
                         } catch (Exception e) {
                             return;
                         }
-                        System.out.println("test4");
+                        System.out.println("test");
                         igra.odigraj(poteza);
                         play();
                     }
