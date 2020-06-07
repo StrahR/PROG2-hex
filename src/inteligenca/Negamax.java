@@ -2,7 +2,6 @@ package inteligenca;
 
 import logika.Igra;
 import logika.Player;
-import runner.Runner;
 import splosno.Koordinati;
 
 import java.util.Set;
@@ -165,7 +164,6 @@ public class Negamax {
      */
     public static Koordinati play(Igra igra) {
         int depth = 7;
-        Runner.okno.status.setText(String.valueOf(evaluate(igra)));
         return (Koordinati) alpha_beta(igra, depth, igra.onTurn, -INF, INF)[0];
     }
 }

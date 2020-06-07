@@ -116,21 +116,25 @@ public class Platno extends JPanel implements MouseListener {
         final int o = (int) ((Igra.size - 1) / 2 * sideLength() * Math.sqrt(3) / 2);
         final int o2 = (int) (sideLength() * Math.sqrt(3) / 6 - LINE_WIDTH * sideLength());
         final int o3 = (int) (sideLength() * Math.sqrt(5) / 2);
+
         final int[] xs = { cx - x - o - o3, cx - x + o + o2, cx + x + o + o3, cx + x - o - o2 };
         final int[] ys = { cy - y, cy + y, cy + y, cy - y };
+
         final int[][] p0 = { { xs[0], xs[1], cx }, { ys[0], ys[1], cy } };
         final int[][] p1 = { { xs[1], xs[2], cx }, { ys[1], ys[2], cy } };
         final int[][] p2 = { { xs[2], xs[3], cx }, { ys[2], ys[3], cy } };
         final int[][] p3 = { { xs[3], xs[0], cx }, { ys[3], ys[0], cy } };
+
         g2.setColor(Colour.P2);
         g2.fillPolygon(p0[0], p0[1], 3);
         g2.fillPolygon(p2[0], p2[1], 3);
+
         g2.setColor(Colour.P1);
         g2.fillPolygon(p1[0], p1[1], 3);
         g2.fillPolygon(p3[0], p3[1], 3);
 
-        g2.setColor(Colour.bg);
         g2.setStroke(new BasicStroke((float) (sideLength() * LINE_WIDTH)));
+        g2.setColor(Colour.bg);
         g2.drawLine(xs[0], ys[0], xs[2], ys[2]);
         g2.drawLine(xs[1], ys[1], xs[3], ys[3]);
     }
