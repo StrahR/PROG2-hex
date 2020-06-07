@@ -2,28 +2,48 @@ package logika;
 
 import splosno.Koordinati;
 import java.util.Stack;
+import java.util.List;
+import java.util.Set;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Random;
 
 public class Simulator {
-    private static  int size = 11;
+
+    public static int size = 11;
     private static Player[][] board = new Player[size][size];
     final static boolean[][] visited = new boolean[size][size];
+    private static List<Koordinati> randomMoves = new ArrayList<Koordinati>();
     final static int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
-    private final static Random generator = new Random();
-    
+    private final static Random random = new Random();
+
     public static Player simulate(Igra igra) {
+
         // monte carlo board
-        for (int i =0; i < size; i++) {
-            for (int j =0; j < size; j++) {
-                if (igra.board[i][j] == Player.None) {
-                    if (generator.nextInt(2) == 1) {
-                        board[i][j] = Player.RED;
-                    } else {
-                        board[i][j] = Player.BLUE;
-                    }
-                } else {
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                if (igra.board[i][j] != Player.None) {
                     board[i][j] = igra.board[i][j];
                 }
+            }
+        }
+
+        randomMoves.clear();
+        randomMoves.addAll(igra.possible_moves);
+        Collections.shuffle(randomMoves, random);
+        Player other;
+        if (igra.onTurn == Player.RED) {
+            other = Player.BLUE;
+        } else {
+            other = Player.RED;
+        }
+        for (int i = 0; i < randomMoves.size(); i++) {
+            int x = randomMoves.get(i).getX();
+            int y = randomMoves.get(i).getY();
+            if (i % 2 == 0) {
+                board[x][y] = igra.onTurn;
+            } else {
+                board[x][y] = other;
             }
         }
 
@@ -37,9 +57,9 @@ public class Simulator {
         // check who won
         for (int i = 0; i < size; i++) {
             // upam da je taprav player
-           if (dfs(i, 0)) {
-               return Player.RED;
-           }
+            if (dfs(i, 0)) {
+                return Player.RED;
+            }
         }
         return Player.BLUE;
     }
