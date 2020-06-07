@@ -207,4 +207,18 @@ public class Igra {
         }
         return str.toString();
     }
+
+    @Override
+    public boolean equals(Object other){
+        if (other == null) return false;
+        if (other == this) return true;
+        if (!(other instanceof Igra)) return false;
+        Igra otherIgra = (Igra)other;
+        return (java.util.Arrays.deepHashCode(board) == java.util.Arrays.deepHashCode(otherIgra.board));
+    }
+
+    @Override
+    public int hashCode() {
+        return java.util.Arrays.deepHashCode(board);
+    }
 }
