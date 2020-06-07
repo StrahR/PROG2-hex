@@ -53,9 +53,9 @@ public class MCTS {
         child.visits++;
         Player winner = Simulator.simulate(child.igra);
         if (winner == player) {
-            return 100;
+            return 1;
         }
-        return -100;
+        return -1;
     }
 
     private void backprop(Node selected, Node root, double outcome) {
@@ -80,9 +80,9 @@ public class MCTS {
             switch (selected.igra.status) {
                 case WIN:
                     if (selected.igra.status.winner == player)
-                        outcome = 100;
+                        outcome = 1;
                     else
-                        outcome = -100;
+                        outcome = -1;
                     break;
                 default: // case IN_PROGRESS:
                     expand(selected);
@@ -115,12 +115,10 @@ public class MCTS {
 
         Node origin;
         if (visited_nodes.containsKey(igra)) {
-            System.out.println("already known");
             origin = visited_nodes.get(igra);
             clean_tree(previous_root, origin);
             previous_root = origin;
         } else {
-            System.out.println("new tree");
             origin = new Node(igra, null, igra.onTurn, null);
             previous_root = origin;
             origin.value = simulate(origin);
@@ -141,6 +139,8 @@ public class MCTS {
                 best = child;
             }
         }
+        expand(best);
+        System.out.println(visited_nodes.size());
         Koordinati move = best.move;
         return move;
     }
