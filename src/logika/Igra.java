@@ -2,9 +2,15 @@ package logika;
 
 import splosno.Koordinati;
 import java.util.ArrayList;
-import java.util.Stack;
+import java.util.Comparator;
+
 import java.util.Set;
+
+import runner.Runner;
+
 import java.util.HashSet;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class Igra {
 
@@ -90,57 +96,98 @@ public class Igra {
         return isValidMove(p.getX(), p.getY());
     }
 
-    public boolean checkWin(Koordinati p) {
-        boolean start = false;
-        boolean end = false;
+    private boolean checkWin() {
         final int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
-        final boolean[][] visited = new boolean[size][size];
-        for (int i = 0; i < size; i++) {
-            for (int j = 0; j < size; j++) {
-                visited[i][j] = false;
+
+        final class Node implements Comparator<Node> {
+            Koordinati koord;
+            int dist;
+            Node predecessor;
+            boolean settled;
+
+            public Node() {
+            }
+
+            public Node(Koordinati koord, int dist) {
+                this.koord = koord;
+                this.dist = dist;
+                this.settled = false;
+            }
+
+            @Override
+            public int compare(Node node1, Node node2) {
+                if (node1.dist < node2.dist)
+                    return -1;
+                if (node1.dist > node2.dist)
+                    return 1;
+                return 0;
             }
         }
 
-        final Player colour = board[p.getX()][p.getY()];
+        // init node LUT
+        final Node[][] node = new Node[size][size];
+        for (int i = 0; i < size; i++) {
+            for (int j = 0; j < size; j++) {
+                node[i][j] = new Node(new Koordinati(i, j), Integer.MIN_VALUE);
+            }
+        }
 
-        // flood-fill
-        final Stack<Koordinati> stack = new Stack<Koordinati>();
-        stack.add(p);
-        while (!stack.isEmpty()) {
-            final Koordinati tmp = stack.pop();
-            final int x = tmp.getX();
-            final int y = tmp.getY();
-            visited[x][y] = true;
+        Player player = onTurn;
 
-            if (colour == Player.RED) {
-                if (y == 0) {
-                    start = true;
-                }
-                if (y == size - 1) {
-                    end = true;
-                }
-            } else {
-                if (x == 0) {
-                    start = true;
-                }
-                if (x == size - 1) {
-                    end = true;
+        // init starting positions
+        Queue<Node> q = new PriorityQueue<Node>(size, new Node());
+        if (player == Player.RED) {
+            for (int i = 0; i < size; i++) {
+                if (board[i][0] == player) {
+                    node[i][0].settled = true;
+                    node[i][0].dist = 0;
+                    q.add(node[i][0]);
                 }
             }
-
-            if (start && end) {
-                return true;
+        } else {
+            for (int i = 0; i < size; i++) {
+                if (board[0][i] == player) {
+                    node[0][i].settled = true;
+                    node[0][i].dist = 0;
+                    q.add(node[0][i]);
+                }
             }
+        }
+
+        while (q.size() > 0) {
+            Node curr = q.poll();
 
             for (final int[] s : smeri) {
-                final int dx = s[0];
-                final int dy = s[1];
-                if (!isValidMove(x + dx, y + dy))
+                final int x = curr.koord.getX() + s[0];
+                final int y = curr.koord.getY() + s[1];
+
+                if (!isValidMove(x, y)) {
                     continue;
-                if (board[x + dx][y + dy] == onTurn && !visited[x + dx][y + dy]) {
-                    stack.add(new Koordinati(x + dx, y + dy));
+                }
+                if (!node[x][y].settled) {
+                    if (board[x][y] != player) {
+                        continue;
+                    }
+
+                    if (node[x][y].dist < curr.dist) {
+                        node[x][y].dist = curr.dist + 1;
+                        node[x][y].predecessor = curr;
+                    }
+                    q.add(node[x][y]);
+
+                    if (player == Player.RED && y == size - 1 || player == Player.BLUE && x == size - 1) {
+                        curr = node[x][y];
+                        ArrayList<Koordinati> path = new ArrayList<Koordinati>();
+                        while (curr != null) {
+                            path.add(curr.koord);
+                            curr = curr.predecessor;
+                        }
+                        Runner.winning_path = path;
+                        return true;
+                    }
                 }
             }
+            curr.settled = true;
         }
         return false;
     }
@@ -163,7 +210,7 @@ public class Igra {
         past_moves.add(p);
         possible_moves.remove(p);
         board[p.getX()][p.getY()] = onTurn;
-        if (checkWin(p)) {
+        if (checkWin()) {
             status = Status.WIN;
             status.setWinner(onTurn);
         }

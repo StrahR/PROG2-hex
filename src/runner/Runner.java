@@ -1,5 +1,6 @@
 package runner;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.concurrent.TimeUnit;
 
@@ -22,6 +23,8 @@ public class Runner {
     public static Igra igra = null;
     public static int size = 5;
     public static MCTS tree = null;
+
+    public static ArrayList<Koordinati> winning_path = null;
 
     private static SwingWorker<Koordinati, Void> worker = null;
 

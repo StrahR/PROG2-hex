@@ -11,7 +11,7 @@ public enum Player {
         return switch (this) {
             case RED -> BLUE;
             case BLUE -> RED;
-            default -> None;
+            case None -> None;
         };
     }
 
@@ -20,7 +20,7 @@ public enum Player {
         return switch (this) {
             case RED -> "X";
             case BLUE -> "O";
-            default -> " ";
+            case None -> " ";
         };
     }
 }

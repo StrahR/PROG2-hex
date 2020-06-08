@@ -162,9 +162,18 @@ public class Platno extends JPanel implements MouseListener {
                     outlineHex(g2, i, j);
                 }
             }
-            Koordinati last_move = Runner.igra.getLastMove();
-            if (last_move != null) {
-                outlineHex(g2, last_move.getX(), last_move.getY(), Colour.accent);
+            switch (Runner.igra.status) {
+                case IN_PROGRESS:
+                    Koordinati last_move = Runner.igra.getLastMove();
+                    if (last_move != null) {
+                        outlineHex(g2, last_move.getX(), last_move.getY(), Colour.accent);
+                    }
+                    break;
+                case WIN:
+                    for (Koordinati p : Runner.winning_path) {
+                        outlineHex(g2, p.getX(), p.getY(), Colour.accent);
+                    }
+                    break;
             }
             // g2.rotate(Math.toRadians(30));
             var t = new AffineTransform(1, 0, 0, 1, 0, 0);
