@@ -15,12 +15,12 @@ import splosno.Koordinati;
 @SuppressWarnings("serial")
 public class Platno extends JPanel implements MouseListener {
 
-    private static class Colour {
-        private static Color bg = Color.WHITE;
-        private static Color fg = Color.BLACK;
-        private static Color P1 = Color.RED;
-        private static Color P2 = Color.BLUE;
-        private static Color accent = Color.YELLOW;
+    public static class Colour {
+        public static Color bg = Color.WHITE;
+        public static Color fg = Color.BLACK;
+        public static Color P1 = Color.RED;
+        public static Color P2 = Color.BLUE;
+        public static Color accent = Color.YELLOW;
     }
 
     private final static double LINE_WIDTH = 0.16;
@@ -111,6 +111,9 @@ public class Platno extends JPanel implements MouseListener {
     }
 
     private void paintBG(final Graphics2D g2, final int cx, final int cy) {
+        g2.setBackground(Colour.bg);
+        g2.clearRect(0, 0, getWidth(), getHeight());
+
         final int x = (int) (Igra.size * sideLength() * Math.sqrt(3) / 2);
         final int y = (int) ((Igra.size * sideLength() * 1.5 + 0.5 * sideLength()) / 2 + LINE_WIDTH * sideLength());
         final int o = (int) ((Igra.size - 1) / 2 * sideLength() * Math.sqrt(3) / 2);
@@ -144,6 +147,9 @@ public class Platno extends JPanel implements MouseListener {
         if (Runner.igra != null) {
             super.paintComponent(g);
             final Graphics2D g2 = (Graphics2D) g;
+
+            Colour.P1 = Runner.playerColour.get(Player.RED);
+            Colour.P2 = Runner.playerColour.get(Player.BLUE);
 
             final int cx = getWidth() / 2;
             final int cy = getHeight() / 2;

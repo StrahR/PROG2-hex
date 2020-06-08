@@ -11,9 +11,12 @@ import logika.Player;
 import splosno.Koordinati;
 import inteligenca.*;
 
+import java.awt.Color;
+
 public class Runner {
     public static EnumMap<Player, Player.Type> playerType;
     public static EnumMap<Player, String> playerName;
+    public static EnumMap<Player, Color> playerColour;
 
     public static Okno okno;
     public static Igra igra = null;
@@ -21,6 +24,16 @@ public class Runner {
     public static MCTS tree = null;
 
     private static SwingWorker<Koordinati, Void> worker = null;
+
+    static {
+        playerName = new EnumMap<Player, String>(Player.class);
+        playerName.put(Player.RED, "Ludvik");
+        playerName.put(Player.BLUE, "Špela");
+
+        playerColour = new EnumMap<Player, Color>(Player.class);
+        playerColour.put(Player.RED, Color.RED);
+        playerColour.put(Player.BLUE, Color.BLUE);
+    }
 
     public static Player.Type currentPlayerType() {
         return playerType.get(igra.onTurn);
@@ -43,7 +56,7 @@ public class Runner {
                         } catch (Exception e) {
                         }
                         if (tree == null) {
-                            tree = new MCTS(igra.onTurn);
+                            tree = new MCTS();
                         }
                         return tree.play(igra);
                     }

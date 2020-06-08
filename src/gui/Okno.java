@@ -30,6 +30,22 @@ public class Okno extends JFrame implements ActionListener {
     private final JMenuItem size_15;
 
     private final JMenuItem settings;
+    private final JDialog s_pane;
+    private final JButton s_save;
+    private final JButton s_p1_colour_button;
+    private final JButton s_p2_colour_button;
+    private final JTextField s_p1_name;
+    private final JTextField s_p2_name;
+
+    private final JButton s_fg_colour_button;
+    private final JButton s_bg_colour_button;
+    private final JButton s_accent_colour_button;
+
+    private Color t_p1_colour;
+    private Color t_p2_colour;
+    private Color t_fg_colour;
+    private Color t_bg_colour;
+    private Color t_accent_colour;
 
     public Okno(final String name, final Platno canvas) {
         this.setTitle(name);
@@ -102,24 +118,109 @@ public class Okno extends JFrame implements ActionListener {
         canvas_layout.weighty = 1.0;
         getContentPane().add(canvas, canvas_layout);
 
-        status = new JLabel();
+        status = new JLabel("Izberite igro!");
         status.setFont(new Font(Font.SANS_SERIF, 0b01, 20));
         final GridBagConstraints status_layout = new GridBagConstraints();
         status_layout.gridx = 0;
         status_layout.gridy = 1;
         status_layout.anchor = GridBagConstraints.CENTER;
         getContentPane().add(status, status_layout);
-        status.setText("Izberite igro!");
 
-        undo = new JButton();
+        undo = new JButton("Razveljavi");
         final GridBagConstraints undo_layout = new GridBagConstraints();
         undo_layout.gridx = 0;
         undo_layout.gridy = 1;
         undo_layout.anchor = GridBagConstraints.EAST;
         getContentPane().add(undo, undo_layout);
-        undo.setText("Razveljavi");
         undo.addActionListener(this);
 
+        // set up settings window
+        s_pane = new JDialog(this, "Nastavitve", /* modal */ true);
+        s_pane.setLayout(new GridBagLayout());
+
+        // Player 1 name and colour settings
+        final JLabel s_p1_name_label = new JLabel("P1:");
+        final GridBagConstraints s_p1_name_label_layout = new GridBagConstraints();
+        s_p1_name_label_layout.gridx = 0;
+        s_p1_name_label_layout.gridy = 0;
+        s_p1_name_label_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p1_name_label, s_p1_name_label_layout);
+
+        s_p1_name = new JTextField();
+        s_p1_name.setColumns(15);
+        final GridBagConstraints s_p1_name_layout = new GridBagConstraints();
+        s_p1_name_layout.gridx = 1;
+        s_p1_name_layout.gridy = 0;
+        s_p1_name_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p1_name, s_p1_name_layout);
+
+        s_p1_colour_button = new JButton("Barva");
+        final GridBagConstraints s_p1_colour_button_layout = new GridBagConstraints();
+        s_p1_colour_button_layout.gridx = 2;
+        s_p1_colour_button_layout.gridy = 0;
+        s_p1_colour_button_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p1_colour_button, s_p1_colour_button_layout);
+        s_p1_colour_button.addActionListener(this);
+
+        // Player 2 name and colour settings
+        final JLabel s_p2_name_label = new JLabel("P2:");
+        final GridBagConstraints s_p2_name_label_layout = new GridBagConstraints();
+        s_p2_name_label_layout.gridx = 0;
+        s_p2_name_label_layout.gridy = 1;
+        s_p2_name_label_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p2_name_label, s_p2_name_label_layout);
+
+        s_p2_name = new JTextField();
+        s_p2_name.setColumns(15);
+        final GridBagConstraints s_p2_name_layout = new GridBagConstraints();
+        s_p2_name_layout.gridx = 1;
+        s_p2_name_layout.gridy = 1;
+        s_p2_name_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p2_name, s_p2_name_layout);
+
+        s_p2_colour_button = new JButton("Barva");
+        final GridBagConstraints s_p2_colour_button_layout = new GridBagConstraints();
+        s_p2_colour_button_layout.gridx = 2;
+        s_p2_colour_button_layout.gridy = 1;
+        s_p2_colour_button_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_p2_colour_button, s_p2_colour_button_layout);
+        s_p2_colour_button.addActionListener(this);
+
+        // Other UI colours
+        s_fg_colour_button = new JButton("Glavna barva");
+        final GridBagConstraints s_fg_colour_button_layout = new GridBagConstraints();
+        s_fg_colour_button_layout.gridx = 0;
+        s_fg_colour_button_layout.gridy = 2;
+        s_fg_colour_button_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_fg_colour_button, s_fg_colour_button_layout);
+        s_fg_colour_button.addActionListener(this);
+        s_bg_colour_button = new JButton("Barva ozadja");
+        final GridBagConstraints s_bg_colour_button_layout = new GridBagConstraints();
+        s_bg_colour_button_layout.gridx = 1;
+        s_bg_colour_button_layout.gridy = 2;
+        s_bg_colour_button_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_bg_colour_button, s_bg_colour_button_layout);
+        s_bg_colour_button.addActionListener(this);
+        s_accent_colour_button = new JButton("Barva poudarek");
+        final GridBagConstraints s_accent_colour_button_layout = new GridBagConstraints();
+        s_accent_colour_button_layout.gridx = 2;
+        s_accent_colour_button_layout.gridy = 2;
+        s_accent_colour_button_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_accent_colour_button, s_accent_colour_button_layout);
+        s_accent_colour_button.addActionListener(this);
+
+        // Save button
+        s_save = new JButton("Shrani");
+        final GridBagConstraints s_save_layout = new GridBagConstraints();
+        s_save_layout.gridx = 0;
+        s_save_layout.gridy = 5;
+        s_save_layout.anchor = GridBagConstraints.PAGE_END;
+        s_pane.add(s_save, s_save_layout);
+        s_save.addActionListener(this);
+
+        s_pane.setSize(500, 500);
+
+        refreshGUI();
     }
 
     @Override
@@ -128,33 +229,21 @@ public class Okno extends JFrame implements ActionListener {
             Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
             Runner.playerType.put(Player.RED, Player.Type.HUMAN);
             Runner.playerType.put(Player.BLUE, Player.Type.AI);
-            Runner.playerName = new EnumMap<Player, String>(Player.class);
-            Runner.playerName.put(Player.RED, "Jože");
-            Runner.playerName.put(Player.BLUE, "Štefan");
             Runner.newGame();
         } else if (e.getSource() == game_AI_HUMAN) {
             Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
             Runner.playerType.put(Player.RED, Player.Type.AI);
             Runner.playerType.put(Player.BLUE, Player.Type.HUMAN);
-            Runner.playerName = new EnumMap<Player, String>(Player.class);
-            Runner.playerName.put(Player.RED, "Jaka");
-            Runner.playerName.put(Player.BLUE, "Alfonz");
             Runner.newGame();
         } else if (e.getSource() == game_HUMAN_HUMAN) {
             Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
             Runner.playerType.put(Player.RED, Player.Type.HUMAN);
             Runner.playerType.put(Player.BLUE, Player.Type.HUMAN);
-            Runner.playerName = new EnumMap<Player, String>(Player.class);
-            Runner.playerName.put(Player.RED, "Ludvik");
-            Runner.playerName.put(Player.BLUE, "Špela");
             Runner.newGame();
         } else if (e.getSource() == game_AI_AI) {
             Runner.playerType = new EnumMap<Player, Player.Type>(Player.class);
             Runner.playerType.put(Player.RED, Player.Type.AI);
             Runner.playerType.put(Player.BLUE, Player.Type.AI);
-            Runner.playerName = new EnumMap<Player, String>(Player.class);
-            Runner.playerName.put(Player.RED, "Karl");
-            Runner.playerName.put(Player.BLUE, "Elizabeta");
             Runner.newGame();
         } else if (e.getSource() == undo) {
             if (Runner.igra != null) {
@@ -191,11 +280,69 @@ public class Okno extends JFrame implements ActionListener {
                 Runner.newGame();
             }
         } else if (e.getSource() == settings) {
-            displaySettings();
-        }
-    }
+            t_p1_colour = null;
+            t_p2_colour = null;
+            t_fg_colour = null;
+            t_bg_colour = null;
+            t_accent_colour = null;
 
-    private void displaySettings() {
+            s_p1_name.setText(Runner.playerName.get(Player.RED));
+            s_p2_name.setText(Runner.playerName.get(Player.BLUE));
+
+            s_pane.setVisible(true);
+        } else if (e.getSource() == s_save) {
+            if (t_p1_colour != null) {
+                Runner.playerColour.put(Player.RED, t_p1_colour);
+            }
+            if (t_p2_colour != null) {
+                Runner.playerColour.put(Player.BLUE, t_p2_colour);
+            }
+            if (t_fg_colour != null) {
+                Platno.Colour.fg = t_fg_colour;
+            }
+            if (t_bg_colour != null) {
+                Platno.Colour.bg = t_bg_colour;
+            }
+            if (t_accent_colour != null) {
+                Platno.Colour.accent = t_accent_colour;
+            }
+
+            if (!s_p1_name.getText().isEmpty()) {
+                Runner.playerName.put(Player.RED, s_p1_name.getText());
+            }
+            if (!s_p2_name.getText().isEmpty()) {
+                Runner.playerName.put(Player.BLUE, s_p2_name.getText());
+            }
+
+            s_pane.dispose();
+            refreshGUI();
+            // System.out.println(s_p1_name.getText());
+        } else if (e.getSource() == s_p1_colour_button) {
+            Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Runner.playerColour.get(Player.RED));
+            if (c != null) {
+                t_p1_colour = c;
+            }
+        } else if (e.getSource() == s_p2_colour_button) {
+            Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Runner.playerColour.get(Player.BLUE));
+            if (c != null) {
+                t_p2_colour = c;
+            }
+        } else if (e.getSource() == s_fg_colour_button) {
+            Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Platno.Colour.fg);
+            if (c != null) {
+                t_fg_colour = c;
+            }
+        } else if (e.getSource() == s_bg_colour_button) {
+            Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Platno.Colour.bg);
+            if (c != null) {
+                t_bg_colour = c;
+            }
+        } else if (e.getSource() == s_accent_colour_button) {
+            Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Platno.Colour.accent);
+            if (c != null) {
+                t_accent_colour = c;
+            }
+        }
     }
 
     public void refreshGUI() {
