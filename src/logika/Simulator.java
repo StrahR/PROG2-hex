@@ -3,7 +3,6 @@ package logika;
 import splosno.Koordinati;
 import java.util.Stack;
 import java.util.List;
-import java.util.Set;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
@@ -56,7 +55,6 @@ public class Simulator {
 
         // check who won
         for (int i = 0; i < size; i++) {
-            // upam da je taprav player
             if (dfs(i, 0)) {
                 return Player.RED;
             }
