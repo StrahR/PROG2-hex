@@ -22,7 +22,7 @@ public class Runner {
 
     public static Okno okno;
     public static Igra igra = null;
-    public static int size = 5;
+    public static int size = 11;
     public static MCTS tree = null;
 
     public static int minimax_depth = 2;

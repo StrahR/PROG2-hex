@@ -15,6 +15,7 @@ public class MCTS {
 
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
+    private Node previous_root = null;
 
     public MCTS() {
     }
@@ -39,7 +40,7 @@ public class MCTS {
             igra.odigraj(move);
             if (!visited_nodes.containsKey(igra)) {
                 Node child = new Node(igra, parent, parent.player.opponent(), move);
-                // child.value = simulate(child);
+                child.value = simulate(child);
                 parent.children.add(child);
                 visited_nodes.put(child.igra, child);
             }
@@ -113,18 +114,31 @@ public class MCTS {
         // System.out.println("Same terminal: " + k);
     }
 
+    private void clean_tree(Node root, Node current) {
+        for (Node child : root.children) {
+            if (child != null && child != current) {
+                clean_tree(child, current);
+            }
+        }
+        visited_nodes.remove(root.igra);
+        root = null;
+    }
+
     public Koordinati play(Igra igra) {
         this.player = igra.onTurn;
 
         Node origin;
         if (visited_nodes.containsKey(igra)) {
+            System.out.println("already known");
             origin = visited_nodes.get(igra);
-            origin.parent = null;
+            clean_tree(previous_root, origin);
+            previous_root = origin;
         } else {
+            System.out.println("new tree");
             origin = new Node(igra, null, igra.onTurn, null);
+            previous_root = origin;
             origin.value = simulate(origin);
             expand(origin);
-            // visited_nodes.put(igra, origin);
         }
         search(origin);
 
