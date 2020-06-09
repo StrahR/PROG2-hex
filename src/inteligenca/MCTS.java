@@ -41,7 +41,7 @@ public class MCTS {
             igra.odigraj(move);
             if (!visited_nodes.containsKey(igra)) {
                 Node child = new Node(igra, parent, parent.player.opponent(), move);
-                child.value = simulate(child);
+                // child.value = simulate(child);
                 parent.children.add(child);
                 visited_nodes.put(child.igra, child);
             }
@@ -71,10 +71,9 @@ public class MCTS {
 
     private void search(Node root) {
         long start = System.currentTimeMillis();
-        // int j = 0;
-        // int k = 0;
-        // Node prev = null;
+        int j = 0;
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
+            j++;
             double outcome = 0;
             Node selected = root;
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
@@ -82,18 +81,14 @@ public class MCTS {
             }
             switch (selected.igra.status) {
                 case WIN:
-                    // if (prev == selected) {
-                    // k++;
-                    // }
-                    // prev = selected;
                     if (selected.igra.status.winner == player)
                         outcome = 100;
                     else
                         outcome = -100;
                     break;
-                default: // case IN_PROGRESS:
+                case IN_PROGRESS:
                     expand(selected);
-                    Set<Koordinati> moves = selected.igra.possibleMoves();
+                    Set<Koordinati> moves = selected.igra.possible_moves;
                     int rand_int = new Random().nextInt(moves.size());
                     int i = 0;
                     for (Node child : selected.children) {
@@ -106,8 +101,7 @@ public class MCTS {
             }
             backprop(selected, root, outcome);
         }
-        // System.out.println("Iterations: " + j);
-        // System.out.println("Same terminal: " + k);
+        System.out.println(j);
     }
 
     private void clean_tree(Node root, Node current) {
