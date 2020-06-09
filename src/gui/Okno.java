@@ -144,11 +144,11 @@ public class Okno extends JFrame implements ActionListener {
         getContentPane().add(undo, undo_layout);
         undo.addActionListener(this);
 
-        // set up settings window
+        // Okno z nastavitvami
         s_pane = new JDialog(this, "Nastavitve", /* modal */ true);
         s_pane.setLayout(new GridBagLayout());
 
-        // Player 1 name and colour settings
+        // Nastavitve imena in barve 1. igralca
         final JLabel s_p1_name_label = new JLabel("P1:");
         final GridBagConstraints s_p1_name_label_layout = new GridBagConstraints();
         s_p1_name_label_layout.gridx = 0;
@@ -172,7 +172,7 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_p1_colour_button, s_p1_colour_button_layout);
         s_p1_colour_button.addActionListener(this);
 
-        // Player 2 name and colour settings
+        // Nastavitve imena in barve 2. igralca
         final JLabel s_p2_name_label = new JLabel("P2:");
         final GridBagConstraints s_p2_name_label_layout = new GridBagConstraints();
         s_p2_name_label_layout.gridx = 0;
@@ -196,7 +196,7 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_p2_colour_button, s_p2_colour_button_layout);
         s_p2_colour_button.addActionListener(this);
 
-        // Other UI colours
+        // Nastavitve barv igre
         s_fg_colour_button = new JButton("Glavna barva");
         final GridBagConstraints s_fg_colour_button_layout = new GridBagConstraints();
         s_fg_colour_button_layout.gridx = 0;
@@ -219,9 +219,9 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_accent_colour_button, s_accent_colour_button_layout);
         s_accent_colour_button.addActionListener(this);
 
-        // AI algorithm select
+        // Izbira algoritma za AI igralca
         final String[] ai_list = { "Naiven", "Minimax", "Negamax", "MTD-f", "MCTS" };
-        // AI 1 algorithm
+        // 1. AI igralec
         final JLabel s_ai1_algo_label = new JLabel("AI1:");
         final GridBagConstraints s_ai1_algo_label_layout = new GridBagConstraints();
         s_ai1_algo_label_layout.gridx = 0;
@@ -236,7 +236,7 @@ public class Okno extends JFrame implements ActionListener {
         s_ai1_algo_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_ai1_algo, s_ai1_algo_layout);
 
-        // AI 2 algorithm
+        // 2 AI igralec
         final JLabel s_ai2_algo_label = new JLabel("AI2:");
         final GridBagConstraints s_ai2_algo_label_layout = new GridBagConstraints();
         s_ai2_algo_label_layout.gridx = 0;
@@ -251,7 +251,7 @@ public class Okno extends JFrame implements ActionListener {
         s_ai2_algo_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_ai2_algo, s_ai2_algo_layout);
 
-        // Minimax params
+        // Parametri za Minimax algoritem
         final JLabel s_minimax_depth_label = new JLabel("Minimax globina:");
         final GridBagConstraints s_minimax_depth_label_layout = new GridBagConstraints();
         s_minimax_depth_label_layout.gridx = 0;
@@ -267,7 +267,7 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_minimax_depth, s_minimax_depth_layout);
         s_minimax_depth.setValue(Runner.minimax_depth);
 
-        // Negamax params
+        // Parametri za Negamax algoritem
         final JLabel s_negamax_depth_label = new JLabel("Negamax globina:");
         final GridBagConstraints s_negamax_depth_label_layout = new GridBagConstraints();
         s_negamax_depth_label_layout.gridx = 0;
@@ -283,7 +283,7 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_negamax_depth, s_negamax_depth_layout);
         s_negamax_depth.setValue(Runner.negamax_depth);
 
-        // MTD-f params
+        // Parametri za MTD-f algoritem
         final JLabel s_mtdf_depth_label = new JLabel("MTD-f globina in f:");
         final GridBagConstraints s_mtdf_depth_label_layout = new GridBagConstraints();
         s_mtdf_depth_label_layout.gridx = 0;
@@ -306,7 +306,7 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_mtdf_f, s_mtdf_f_layout);
         s_mtdf_f.setValue(Runner.mtdf_f);
 
-        // MCTS params
+        // // Parametri za MCTS algoritem
         final JLabel s_mcts_depth_label = new JLabel("MCTS timeout [ms]:");
         final GridBagConstraints s_mcts_depth_label_layout = new GridBagConstraints();
         s_mcts_depth_label_layout.gridx = 0;
@@ -321,7 +321,7 @@ public class Okno extends JFrame implements ActionListener {
         s_mcts_time_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_mcts_time, s_mcts_time_layout);
 
-        // Save button
+        // Gumb za shranjevanje
         s_save = new JButton("Shrani");
         final GridBagConstraints s_save_layout = new GridBagConstraints();
         s_save_layout.gridx = 0;
