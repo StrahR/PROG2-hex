@@ -2,6 +2,7 @@ package gui;
 
 import javax.swing.*;
 
+import logika.Igra;
 import logika.Player;
 import runner.Runner;
 
@@ -40,6 +41,15 @@ public class Okno extends JFrame implements ActionListener {
     private final JButton s_fg_colour_button;
     private final JButton s_bg_colour_button;
     private final JButton s_accent_colour_button;
+
+    private final JComboBox<String> s_ai1_algo;
+    private final JComboBox<String> s_ai2_algo;
+
+    final JSpinner s_minimax_depth;
+    final JSpinner s_negamax_depth;
+    final JSpinner s_mtdf_depth;
+    final JSpinner s_mtdf_f;
+    final JSpinner s_mcts_time;
 
     private Color t_p1_colour;
     private Color t_p2_colour;
@@ -209,11 +219,113 @@ public class Okno extends JFrame implements ActionListener {
         s_pane.add(s_accent_colour_button, s_accent_colour_button_layout);
         s_accent_colour_button.addActionListener(this);
 
+        // AI algorithm select
+        final String[] ai_list = { "Naiven", "Minimax", "Negamax", "MTD-f", "MCTS" };
+        // AI 1 algorithm
+        final JLabel s_ai1_algo_label = new JLabel("AI1:");
+        final GridBagConstraints s_ai1_algo_label_layout = new GridBagConstraints();
+        s_ai1_algo_label_layout.gridx = 0;
+        s_ai1_algo_label_layout.gridy = 3;
+        s_ai1_algo_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_ai1_algo_label, s_ai1_algo_label_layout);
+
+        s_ai1_algo = new JComboBox<String>(ai_list);
+        final GridBagConstraints s_ai1_algo_layout = new GridBagConstraints();
+        s_ai1_algo_layout.gridx = 1;
+        s_ai1_algo_layout.gridy = 3;
+        s_ai1_algo_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_ai1_algo, s_ai1_algo_layout);
+
+        // AI 2 algorithm
+        final JLabel s_ai2_algo_label = new JLabel("AI2:");
+        final GridBagConstraints s_ai2_algo_label_layout = new GridBagConstraints();
+        s_ai2_algo_label_layout.gridx = 0;
+        s_ai2_algo_label_layout.gridy = 4;
+        s_ai2_algo_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_ai2_algo_label, s_ai2_algo_label_layout);
+
+        s_ai2_algo = new JComboBox<String>(ai_list);
+        final GridBagConstraints s_ai2_algo_layout = new GridBagConstraints();
+        s_ai2_algo_layout.gridx = 1;
+        s_ai2_algo_layout.gridy = 4;
+        s_ai2_algo_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_ai2_algo, s_ai2_algo_layout);
+
+        // Minimax params
+        final JLabel s_minimax_depth_label = new JLabel("Minimax globina:");
+        final GridBagConstraints s_minimax_depth_label_layout = new GridBagConstraints();
+        s_minimax_depth_label_layout.gridx = 0;
+        s_minimax_depth_label_layout.gridy = 5;
+        s_minimax_depth_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_minimax_depth_label, s_minimax_depth_label_layout);
+
+        s_minimax_depth = new JSpinner(new SpinnerNumberModel(Runner.minimax_depth, 1, 6, 1));
+        final GridBagConstraints s_minimax_depth_layout = new GridBagConstraints();
+        s_minimax_depth_layout.gridx = 1;
+        s_minimax_depth_layout.gridy = 5;
+        s_minimax_depth_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_minimax_depth, s_minimax_depth_layout);
+        s_minimax_depth.setValue(Runner.minimax_depth);
+
+        // Negamax params
+        final JLabel s_negamax_depth_label = new JLabel("Negamax globina:");
+        final GridBagConstraints s_negamax_depth_label_layout = new GridBagConstraints();
+        s_negamax_depth_label_layout.gridx = 0;
+        s_negamax_depth_label_layout.gridy = 6;
+        s_negamax_depth_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_negamax_depth_label, s_negamax_depth_label_layout);
+
+        s_negamax_depth = new JSpinner(new SpinnerNumberModel(Runner.negamax_depth, 1, 6, 1));
+        final GridBagConstraints s_negamax_depth_layout = new GridBagConstraints();
+        s_negamax_depth_layout.gridx = 1;
+        s_negamax_depth_layout.gridy = 6;
+        s_negamax_depth_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_negamax_depth, s_negamax_depth_layout);
+        s_negamax_depth.setValue(Runner.negamax_depth);
+
+        // MTD-f params
+        final JLabel s_mtdf_depth_label = new JLabel("MTD-f globina in f:");
+        final GridBagConstraints s_mtdf_depth_label_layout = new GridBagConstraints();
+        s_mtdf_depth_label_layout.gridx = 0;
+        s_mtdf_depth_label_layout.gridy = 7;
+        s_mtdf_depth_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_mtdf_depth_label, s_mtdf_depth_label_layout);
+
+        s_mtdf_depth = new JSpinner(new SpinnerNumberModel(Runner.mtdf_depth, 2, 8, 2));
+        final GridBagConstraints s_mtdf_depth_layout = new GridBagConstraints();
+        s_mtdf_depth_layout.gridx = 1;
+        s_mtdf_depth_layout.gridy = 7;
+        s_mtdf_depth_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_mtdf_depth, s_mtdf_depth_layout);
+        s_mtdf_depth.setValue(Runner.mtdf_depth);
+        s_mtdf_f = new JSpinner(new SpinnerNumberModel(Runner.mtdf_f, -Igra.size, Igra.size, 1));
+        final GridBagConstraints s_mtdf_f_layout = new GridBagConstraints();
+        s_mtdf_f_layout.gridx = 2;
+        s_mtdf_f_layout.gridy = 7;
+        s_mtdf_f_layout.anchor = GridBagConstraints.WEST;
+        s_pane.add(s_mtdf_f, s_mtdf_f_layout);
+        s_mtdf_f.setValue(Runner.mtdf_f);
+
+        // MCTS params
+        final JLabel s_mcts_depth_label = new JLabel("MCTS timeout [ms]:");
+        final GridBagConstraints s_mcts_depth_label_layout = new GridBagConstraints();
+        s_mcts_depth_label_layout.gridx = 0;
+        s_mcts_depth_label_layout.gridy = 8;
+        s_mcts_depth_label_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_mcts_depth_label, s_mcts_depth_label_layout);
+
+        s_mcts_time = new JSpinner(new SpinnerNumberModel(Runner.mcts_time_ms, 100, 5000, 100));
+        final GridBagConstraints s_mcts_time_layout = new GridBagConstraints();
+        s_mcts_time_layout.gridx = 1;
+        s_mcts_time_layout.gridy = 8;
+        s_mcts_time_layout.anchor = GridBagConstraints.CENTER;
+        s_pane.add(s_mcts_time, s_mcts_time_layout);
+
         // Save button
         s_save = new JButton("Shrani");
         final GridBagConstraints s_save_layout = new GridBagConstraints();
         s_save_layout.gridx = 0;
-        s_save_layout.gridy = 5;
+        s_save_layout.gridy = 50;
         s_save_layout.anchor = GridBagConstraints.PAGE_END;
         s_pane.add(s_save, s_save_layout);
         s_save.addActionListener(this);
@@ -289,6 +401,15 @@ public class Okno extends JFrame implements ActionListener {
             s_p1_name.setText(Runner.playerName.get(Player.RED));
             s_p2_name.setText(Runner.playerName.get(Player.BLUE));
 
+            s_ai1_algo.setSelectedItem(Runner.aiAlgorithm.get(Player.RED));
+            s_ai2_algo.setSelectedItem(Runner.aiAlgorithm.get(Player.BLUE));
+
+            s_minimax_depth.setValue(Runner.minimax_depth);
+            s_negamax_depth.setValue(Runner.negamax_depth);
+            s_mtdf_depth.setValue(Runner.mtdf_depth);
+            s_mtdf_f.setValue(Runner.mtdf_f);
+            s_mcts_time.setValue(Runner.mcts_time_ms);
+
             s_pane.setVisible(true);
         } else if (e.getSource() == s_save) {
             if (t_p1_colour != null) {
@@ -313,6 +434,23 @@ public class Okno extends JFrame implements ActionListener {
             if (!s_p2_name.getText().isEmpty()) {
                 Runner.playerName.put(Player.BLUE, s_p2_name.getText());
             }
+
+            // check if ai algo was modified and restart game if it was
+            if (!Runner.aiAlgorithm.get(Player.RED).equals(s_ai1_algo.getSelectedItem().toString())
+                    || !Runner.aiAlgorithm.get(Player.BLUE).equals(s_ai2_algo.getSelectedItem().toString())) {
+                Runner.aiAlgorithm.put(Player.RED, s_ai1_algo.getSelectedItem().toString());
+                Runner.aiAlgorithm.put(Player.BLUE, s_ai2_algo.getSelectedItem().toString());
+                if (Runner.igra != null) {
+                    Runner.newGame();
+                }
+            }
+
+            // set the AI parameters, can be adjusted on the fly
+            Runner.minimax_depth = (int) s_minimax_depth.getValue();
+            Runner.negamax_depth = (int) s_negamax_depth.getValue();
+            Runner.mtdf_depth = (int) s_mtdf_depth.getValue();
+            Runner.mtdf_f = (int) s_mtdf_f.getValue();
+            Runner.mcts_time_ms = (int) s_mcts_time.getValue();
 
             s_pane.dispose();
             refreshGUI();

@@ -18,11 +18,18 @@ public class Runner {
     public static EnumMap<Player, Player.Type> playerType;
     public static EnumMap<Player, String> playerName;
     public static EnumMap<Player, Color> playerColour;
+    public static EnumMap<Player, String> aiAlgorithm;
 
     public static Okno okno;
     public static Igra igra = null;
     public static int size = 5;
     public static MCTS tree = null;
+
+    public static int minimax_depth = 1;
+    public static int negamax_depth = 2;
+    public static int mtdf_depth = 4;
+    public static int mtdf_f = 0;
+    public static int mcts_time_ms = 3000;
 
     public static ArrayList<Koordinati> winning_path = null;
 
@@ -36,6 +43,10 @@ public class Runner {
         playerColour = new EnumMap<Player, Color>(Player.class);
         playerColour.put(Player.RED, Color.RED);
         playerColour.put(Player.BLUE, Color.BLUE);
+
+        aiAlgorithm = new EnumMap<Player, String>(Player.class);
+        aiAlgorithm.put(Player.RED, "MCTS");
+        aiAlgorithm.put(Player.BLUE, "MCTS");
     }
 
     public static Player.Type currentPlayerType() {
@@ -44,6 +55,7 @@ public class Runner {
 
     public static void newGame() {
         igra = new Igra(size);
+        tree = new MCTS();
         play();
     }
 
@@ -58,10 +70,14 @@ public class Runner {
                             TimeUnit.MILLISECONDS.sleep(100);
                         } catch (Exception e) {
                         }
-                        if (tree == null) {
-                            tree = new MCTS();
-                        }
-                        return tree.play(igra);
+
+                        return switch (aiAlgorithm.get(igra.onTurn)) {
+                            case "MCTS" -> tree.play(igra);
+                            case "MTD-f" -> MTDF.play(igra);
+                            case "Negamax" -> Negamax.play(igra);
+                            case "Minimax" -> Minimax.play(igra);
+                            default -> Naive.play(igra);
+                        };
                     }
 
                     @Override
