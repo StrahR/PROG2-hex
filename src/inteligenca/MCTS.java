@@ -20,6 +20,9 @@ public class MCTS {
     public MCTS() {
     }
 
+    /**
+     * Vrne vozlišče v drevesu, ki je na koncu veje z najboljšim rezultatom
+     */
     private Node selectFavouriteChild(Node parent) {
         Set<Node> children = parent.children;
         Node favorite_child = null;
@@ -34,19 +37,25 @@ public class MCTS {
         return favorite_child;
     }
 
+    /**
+     * Doda nova vozlišča trenutnemu vozlišču
+     */
     private void expand(Node parent) {
         for (Koordinati move : parent.igra.possibleMoves()) {
             Igra igra = new Igra(parent.igra);
             igra.odigraj(move);
             if (!visited_nodes.containsKey(igra)) {
                 Node child = new Node(igra, parent, parent.player.opponent(), move);
-                // child.value = simulate(child);
+                child.value = simulate(child);
                 parent.children.add(child);
                 visited_nodes.put(child.igra, child);
             }
         }
     }
 
+    /**
+     * Simulira naključno igro od trenutnega stanja do konca
+     */
     private int simulate(Node child) {
         child.visits++;
         Igra igra = new Igra(child.igra);
@@ -60,6 +69,9 @@ public class MCTS {
         return -1;
     }
 
+    /**
+     * Posodobi vrednosti vseh vozlišč v veji, ki jo je obiskal
+     */
     private void backprop(Node selected, Node root, double outcome) {
         Node current = selected;
         while (current != root) {
@@ -104,6 +116,9 @@ public class MCTS {
         System.out.println("iterations: " + j);
     }
 
+    /**
+     * Počisti tisti del drevesa, ki ga ne potrebujemo več
+     */
     private void clean_tree(Node root, Node current) {
         for (Node child : root.children) {
             if (child != null && child != current) {
@@ -114,6 +129,9 @@ public class MCTS {
         root = null;
     }
 
+    /**
+     * Vrne najboljšo potezo
+     */
     public Koordinati play(Igra igra) {
         this.player = igra.onTurn;
 
