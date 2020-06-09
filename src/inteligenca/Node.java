@@ -33,7 +33,6 @@ public class Node {
      * Vrne izračunano vrednost po UCB formuli
      */
     public double UCB_score(Player player) {
-
         return value / (1e-6 + visits) + Math.sqrt(UCB_factor * Math.log(1 + parent.visits) / (1e-6 + visits));
     }
 }
