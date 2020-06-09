@@ -92,9 +92,9 @@ public class MCTS {
                     // }
                     // prev = selected;
                     if (selected.igra.status.winner == player)
-                        outcome = 100000;
+                        outcome = 100;
                     else
-                        outcome = -100000;
+                        outcome = -100;
                     break;
                 default: // case IN_PROGRESS:
                     expand(selected);
