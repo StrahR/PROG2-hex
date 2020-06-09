@@ -236,7 +236,7 @@ public class Okno extends JFrame implements ActionListener {
         s_ai1_algo_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_ai1_algo, s_ai1_algo_layout);
 
-        // 2 AI igralec
+        // 2. AI igralec
         final JLabel s_ai2_algo_label = new JLabel("AI2:");
         final GridBagConstraints s_ai2_algo_label_layout = new GridBagConstraints();
         s_ai2_algo_label_layout.gridx = 0;
