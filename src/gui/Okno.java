@@ -435,7 +435,7 @@ public class Okno extends JFrame implements ActionListener {
                 Runner.playerName.put(Player.BLUE, s_p2_name.getText());
             }
 
-            // check if ai algo was modified and restart game if it was
+            // Preveri, če se je algoritem za AI spremenil in nato znova zažene igro
             if (!Runner.aiAlgorithm.get(Player.RED).equals(s_ai1_algo.getSelectedItem().toString())
                     || !Runner.aiAlgorithm.get(Player.BLUE).equals(s_ai2_algo.getSelectedItem().toString())) {
                 Runner.aiAlgorithm.put(Player.RED, s_ai1_algo.getSelectedItem().toString());
@@ -445,7 +445,7 @@ public class Okno extends JFrame implements ActionListener {
                 }
             }
 
-            // set the AI parameters, can be adjusted on the fly
+            // Nastavi AI parametre, ki jih lahko spreminjamo med igro
             Runner.minimax_depth = (int) s_minimax_depth.getValue();
             Runner.negamax_depth = (int) s_negamax_depth.getValue();
             Runner.mtdf_depth = (int) s_mtdf_depth.getValue();
@@ -454,7 +454,6 @@ public class Okno extends JFrame implements ActionListener {
 
             s_pane.dispose();
             refreshGUI();
-            // System.out.println(s_p1_name.getText());
         } else if (e.getSource() == s_p1_colour_button) {
             Color c = JColorChooser.showDialog(s_pane, "Izberi barvo", Runner.playerColour.get(Player.RED));
             if (c != null) {
