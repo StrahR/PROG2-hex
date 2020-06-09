@@ -48,7 +48,6 @@ public class MCTS {
             igra.odigraj(move);
             if (!visited_nodes.containsKey(igra)) {
                 final Node child = new Node(igra, parent, parent.player.opponent(), move);
-                child.value = simulate(child);
                 parent.children.add(child);
                 visited_nodes.put(child.igra, child);
             }
@@ -59,7 +58,7 @@ public class MCTS {
      * Simulira naključno igro od trenutnega stanja do konca
      */
     private int simulate(final Node child) {
-        child.visits++;
+        // child.visits++;
         final Igra igra = new Igra(child.igra);
         while (igra.status == Igra.Status.IN_PROGRESS) {
             final Koordinati move = Naive.play(igra);
