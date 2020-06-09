@@ -25,20 +25,15 @@ public class Node {
     }
 
     public void update_value(double outcome, Player player) {
-        // if (this.player == player) {
         value += outcome;
-        // }
         visits += 1;
     }
 
     /**
-     * UCB formula za score
+     * Vrne izračunano vrednost po UCB formuli
      */
     public double UCB_score(Player player) {
-        // if (this.player != player) {
-        // return (1 - value / (1e-6 + visits))
-        // + UCB_factor * Math.sqrt(Math.log(1 + parent.visits) / (1e-6 + visits));
-        // }
+
         return value / (1e-6 + visits) + Math.sqrt(UCB_factor * Math.log(1 + parent.visits) / (1e-6 + visits));
     }
 }
