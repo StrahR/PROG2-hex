@@ -2,6 +2,7 @@ package inteligenca;
 
 import logika.Igra;
 import logika.Player;
+import runner.Runner;
 import splosno.Koordinati;
 
 import java.util.Set;
@@ -136,13 +137,12 @@ public class Minimax {
      * Vrne najboljšo potezo
      */
     public static Koordinati play(Igra igra) {
-        int depth = 1;
         Koordinati best_move = new Koordinati(-1, -1);
         double max_score = -INF;
         Set<Koordinati> moves = igra.possibleMoves();
         for (Koordinati move : moves) {
             igra.odigraj(move);
-            double score = alpha_beta(igra, depth, igra.onTurn.opponent(), -INF, INF);
+            double score = alpha_beta(igra, Runner.minimax_depth, igra.onTurn.opponent(), -INF, INF);
             igra.razveljavi();
             if (score > max_score) {
                 max_score = score;

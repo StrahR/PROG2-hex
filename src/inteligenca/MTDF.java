@@ -1,6 +1,7 @@
 package inteligenca;
 
 import logika.Igra;
+import runner.Runner;
 import splosno.Koordinati;
 
 import java.util.AbstractMap;
@@ -31,10 +32,9 @@ public class MTDF extends Negamax {
     }
 
     public static Koordinati play(Igra igra) {
-        int val = 0;
-        int depth = 8;
+        int val = Runner.mtdf_f;
         Koordinati move = new Koordinati(-1, -1);
-        for (int i = 2; i <= depth; i += 2) {
+        for (int i = 2; i <= Runner.mtdf_depth; i += 2) {
             var ab = MTD(igra, val, i);
             move = ab.getKey();
             val = ab.getValue();

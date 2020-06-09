@@ -45,7 +45,7 @@ public class Runner {
         playerColour.put(Player.BLUE, Color.BLUE);
 
         aiAlgorithm = new EnumMap<Player, String>(Player.class);
-        aiAlgorithm.put(Player.RED, "MCTS");
+        aiAlgorithm.put(Player.RED, "Negamax");
         aiAlgorithm.put(Player.BLUE, "MCTS");
     }
 
@@ -61,39 +61,38 @@ public class Runner {
 
     public static void play() {
         okno.refreshGUI();
-        if (igra.status == Igra.Status.IN_PROGRESS) {
-            if (currentPlayerType() == Player.Type.AI) {
-                worker = new SwingWorker<Koordinati, Void>() {
-                    @Override
-                    protected Koordinati doInBackground() {
-                        try {
-                            TimeUnit.MILLISECONDS.sleep(100);
-                        } catch (Exception e) {
-                        }
-
-                        return switch (aiAlgorithm.get(igra.onTurn)) {
-                            case "MCTS" -> tree.play(igra);
-                            case "MTD-f" -> MTDF.play(igra);
-                            case "Negamax" -> Negamax.play(igra);
-                            case "Minimax" -> Minimax.play(igra);
-                            default -> Naive.play(igra);
-                        };
+        if (igra.status == Igra.Status.IN_PROGRESS && currentPlayerType() == Player.Type.AI) {
+            worker = new SwingWorker<Koordinati, Void>() {
+                @Override
+                protected Koordinati doInBackground() {
+                    try {
+                        TimeUnit.MILLISECONDS.sleep(100);
+                    } catch (Exception e) {
                     }
 
-                    @Override
-                    protected void done() {
-                        Koordinati poteza = null;
-                        try {
-                            poteza = get();
-                        } catch (Exception e) {
-                            return;
-                        }
-                        igra.odigraj(poteza);
-                        play();
+                    return switch (aiAlgorithm.get(igra.onTurn)) {
+                        case "MCTS" -> tree.play(igra);
+                        case "MTD-f" -> MTDF.play(igra);
+                        case "Negamax" -> Negamax.play(igra);
+                        case "Minimax" -> Minimax.play(igra);
+                        default -> Naive.play(igra);
+                    };
+                }
+
+                @Override
+                protected void done() {
+                    Koordinati poteza = null;
+                    try {
+                        poteza = get();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        return;
                     }
-                };
-                worker.execute();
-            }
+                    igra.odigraj(poteza);
+                    play();
+                }
+            };
+            worker.execute();
         }
     }
 

@@ -2,6 +2,7 @@ package inteligenca;
 
 import logika.Igra;
 import logika.Player;
+import runner.Runner;
 import splosno.Koordinati;
 
 import java.util.Set;
@@ -140,16 +141,17 @@ public class Negamax {
 
         int best_score = -INF;
         for (Koordinati move : moves) {
-            igra.odigraj(move);
-            int score = -(int) alpha_beta(igra, depth - 1, player.opponent(), -beta, -alpha)[1];
-            igra.razveljavi();
-            if (score > best_score) {
-                best_move = move;
-                best_score = score;
-            }
-            alpha = Math.max(alpha, best_score);
-            if (alpha >= beta) {
-                break;
+            if (igra.odigraj(move)) {
+                int score = -(int) alpha_beta(igra, depth - 1, player.opponent(), -beta, -alpha)[1];
+                igra.razveljavi();
+                if (score > best_score) {
+                    best_move = move;
+                    best_score = score;
+                }
+                alpha = Math.max(alpha, best_score);
+                if (alpha >= beta) {
+                    break;
+                }
             }
         }
         if (Igra.isValidMove(best_move)) {
@@ -163,7 +165,6 @@ public class Negamax {
      * Vrne najboljšo potezo
      */
     public static Koordinati play(Igra igra) {
-        int depth = 7;
-        return (Koordinati) alpha_beta(igra, depth, igra.onTurn, -INF, INF)[0];
+        return (Koordinati) alpha_beta(igra, Runner.negamax_depth, igra.onTurn, -INF, INF)[0];
     }
 }
