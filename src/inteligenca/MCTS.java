@@ -2,6 +2,7 @@ package inteligenca;
 
 import logika.Igra;
 import logika.Player;
+import runner.Runner;
 import splosno.Koordinati;
 
 import java.util.Set;
@@ -15,7 +16,8 @@ public class MCTS {
 
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
-    private Node previous_root;
+    private Node previous_root = null;
+    private int cleaned = 0;
 
     public MCTS() {
     }
@@ -73,32 +75,31 @@ public class MCTS {
      * Posodobi vrednosti vseh vozlišč v veji, ki jo je obiskal
      */
     private void backprop(Node selected, Node root, double outcome) {
-        Node current = selected;
-        while (current != root) {
-            current.update_value(outcome, player);
-            current = current.parent;
+        selected.update_value(outcome, player);
+        if (selected == root) {
+            return;
         }
-        root.update_value(outcome, player);
+        backprop(selected.parent, root, outcome);
     }
 
     private void search(Node root) {
         long start = System.currentTimeMillis();
         int j = 0;
-        while (System.currentTimeMillis() - start < TIME_LIMIT) {
+        while (System.currentTimeMillis() - start < Runner.mcts_time_ms) {
             j++;
             double outcome = 0;
             Node selected = root;
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
-                selected = selectFavouriteChild(selected);                
+                selected = selectFavouriteChild(selected);
             }
             switch (selected.igra.status) {
                 case WIN:
                     if (selected.igra.status.winner == player)
-                        outcome = 1;
+                        outcome = 100;
                     else
-                        outcome = -1;
+                        outcome = -100;
                     break;
-                default: // case IN_PROGRESS:
+                case IN_PROGRESS:
                     expand(selected);
                     Set<Koordinati> moves = selected.igra.possibleMoves();
                     int rand_int = new Random().nextInt(moves.size());
@@ -137,14 +138,21 @@ public class MCTS {
 
         Node origin;
         if (visited_nodes.containsKey(igra)) {
+            System.out.println("already known");
             origin = visited_nodes.get(igra);
             clean_tree(previous_root, origin);
+            System.gc();
             previous_root = origin;
         } else {
+            System.out.println("new tree");
             origin = new Node(igra, null, igra.onTurn, null);
+            if (previous_root != null) {
+                clean_tree(previous_root, origin);
+                System.gc();
+            }
+            previous_root = origin;
             origin.value = simulate(origin);
             expand(origin);
-            previous_root = origin;
         }
         search(origin);
         Set<Node> children = origin.children;
@@ -160,6 +168,10 @@ public class MCTS {
                 best = child;
             }
         }
+        // System.out.println("wins: " + best.value + " visits: " + best.visits);
+        System.out.println("Cleaned nodes:   " + cleaned);
+        System.out.println("Remaining nodes: " + visited_nodes.size());
+        cleaned = 0;
         Koordinati move = best.move;
         return move;
     }
