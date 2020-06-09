@@ -98,7 +98,6 @@ public class Minimax {
     }
 
     private static double alpha_beta(final Igra igra, final int depth, final Player player, double alpha, double beta) {
-        // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
         if (depth == 0 || igra.status != Igra.Status.IN_PROGRESS) {
             return evaluate(igra, player);
         }
