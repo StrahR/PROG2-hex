@@ -16,6 +16,7 @@ public class MCTS {
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
     private Node previous_root = null;
+    private int cleaned = 0;
 
     public MCTS() {
     }
@@ -61,12 +62,11 @@ public class MCTS {
     }
 
     private void backprop(Node selected, Node root, double outcome) {
-        Node current = selected;
-        while (current != root) {
-            current.update_value(outcome, player);
-            current = current.parent;
+        selected.update_value(outcome, player);
+        if (selected == root) {
+            return;
         }
-        root.update_value(outcome, player);
+        backprop(selected.parent, root, outcome);
     }
 
     private void search(Node root) {
@@ -77,13 +77,8 @@ public class MCTS {
         while (System.currentTimeMillis() - start < TIME_LIMIT) {
             double outcome = 0;
             Node selected = root;
-            Set<Koordinati> moves = selected.igra.possibleMoves();
-            // j++;
-            // System.out.println(visited_nodes.size());
-            // System.out.println(System.currentTimeMillis() - start);
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
                 selected = selectFavouriteChild(selected);
-                moves = selected.igra.possibleMoves();
             }
             switch (selected.igra.status) {
                 case WIN:
@@ -98,6 +93,7 @@ public class MCTS {
                     break;
                 default: // case IN_PROGRESS:
                     expand(selected);
+                    Set<Koordinati> moves = selected.igra.possibleMoves();
                     int rand_int = new Random().nextInt(moves.size());
                     int i = 0;
                     for (Node child : selected.children) {
@@ -122,6 +118,7 @@ public class MCTS {
         }
         visited_nodes.remove(root.igra);
         root = null;
+        cleaned++;
     }
 
     public Koordinati play(Igra igra) {
@@ -132,6 +129,7 @@ public class MCTS {
             System.out.println("already known");
             origin = visited_nodes.get(igra);
             clean_tree(previous_root, origin);
+            System.gc();
             previous_root = origin;
         } else {
             System.out.println("new tree");
@@ -146,15 +144,20 @@ public class MCTS {
         Node best = null;
         double max_score = -INF;
         for (Node child : children) {
-            if (child.visits == 0) {
-                continue;
-            }
+            // if (child.visits == 0) {
+            // continue;
+            // }
             double v = child.value;
             if (v > max_score) {
                 max_score = v;
                 best = child;
             }
         }
+        expand(best);
+        // System.out.println("wins: " + best.value + " visits: " + best.visits);
+        System.out.println("Cleaned nodes:   " + cleaned);
+        System.out.println("Remaining nodes: " + visited_nodes.size());
+        cleaned = 0;
         Koordinati move = best.move;
         return move;
     }
