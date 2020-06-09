@@ -15,6 +15,8 @@ public class MCTS {
 
     private Player player;
     private Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
+    private Node previous_root;
+    private int cleaned = 0;
 
     public MCTS() {
     }
@@ -91,9 +93,9 @@ public class MCTS {
                     // }
                     // prev = selected;
                     if (selected.igra.status.winner == player)
-                        outcome = 100000;
+                        outcome = 1;
                     else
-                        outcome = -100000;
+                        outcome = -1;
                     break;
                 default: // case IN_PROGRESS:
                     expand(selected);
@@ -113,17 +115,30 @@ public class MCTS {
         // System.out.println("Same terminal: " + k);
     }
 
+    private void clean_tree(Node root, Node current) {
+        for (Node child : root.children) {
+            if (child != null && child != current) {
+                clean_tree(child, current);
+            }
+        }
+        visited_nodes.remove(root.igra);
+        root = null;
+        cleaned++;
+    }
+
     public Koordinati play(Igra igra) {
         this.player = igra.onTurn;
 
         Node origin;
         if (visited_nodes.containsKey(igra)) {
             origin = visited_nodes.get(igra);
-            origin.parent = null;
+            clean_tree(previous_root, origin);
+            previous_root = origin;
         } else {
             origin = new Node(igra, null, igra.onTurn, null);
             origin.value = simulate(origin);
             expand(origin);
+            previous_root = origin;
             // visited_nodes.put(igra, origin);
         }
         search(origin);
@@ -141,6 +156,9 @@ public class MCTS {
                 best = child;
             }
         }
+        // System.out.println("Cleaned nodes: " + cleaned);
+        // cleaned = 0;
+        // System.out.println("Remaining nodes: " + visited_nodes.size());
         Koordinati move = best.move;
         return move;
     }
