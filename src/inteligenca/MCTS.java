@@ -17,7 +17,6 @@ public class MCTS {
     private Player player;
     private final Map<Igra, Node> visited_nodes = new HashMap<Igra, Node>();
     private Node previous_root = null;
-    private int cleaned = 0;
 
     public MCTS() {
     }
@@ -83,9 +82,7 @@ public class MCTS {
 
     private void search(final Node root) {
         final long start = System.currentTimeMillis();
-        int j = 0;
         while (System.currentTimeMillis() - start < Runner.mcts_time_ms) {
-            j++;
             double outcome = 0;
             Node selected = root;
             while (selected.children.size() > 0 && selected.igra.status == Igra.Status.IN_PROGRESS) {
@@ -94,9 +91,9 @@ public class MCTS {
             switch (selected.igra.status) {
                 case WIN:
                     if (selected.igra.status.winner == player)
-                        outcome = 100;
+                        outcome = 1;
                     else
-                        outcome = -100;
+                        outcome = -1;
                     break;
                 case IN_PROGRESS:
                     expand(selected);
@@ -113,7 +110,6 @@ public class MCTS {
             }
             backprop(selected, root, outcome);
         }
-        System.out.println("iterations: " + j);
     }
 
     /**
@@ -137,13 +133,11 @@ public class MCTS {
 
         Node origin;
         if (visited_nodes.containsKey(igra)) {
-            System.out.println("already known");
             origin = visited_nodes.get(igra);
             clean_tree(previous_root, origin);
             System.gc();
             previous_root = origin;
         } else {
-            System.out.println("new tree");
             origin = new Node(igra, null, igra.onTurn, null);
             if (previous_root != null) {
                 clean_tree(previous_root, origin);
@@ -167,10 +161,6 @@ public class MCTS {
                 best = child;
             }
         }
-        // System.out.println("wins: " + best.value + " visits: " + best.visits);
-        System.out.println("Cleaned nodes:   " + cleaned);
-        System.out.println("Remaining nodes: " + visited_nodes.size());
-        cleaned = 0;
         final Koordinati move = best.move;
         return move;
     }
