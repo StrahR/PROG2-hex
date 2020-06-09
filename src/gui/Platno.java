@@ -40,6 +40,14 @@ public class Platno extends JPanel implements MouseListener {
                 2 * getHeight() / (3 * Igra.size + 1.0));
     }
 
+    /**
+     * Iz pozicije (i, j) poračuna referečno točko šestkotnika. To je zgornje levo
+     * oglišče očrtanega 4kotnika
+     * 
+     * @param i
+     * @param j
+     * @return
+     */
     private double[] topLeft(final int i, final int j) {
         final double w = sideLength();
         final int cx = getWidth() / 2;
@@ -51,6 +59,13 @@ public class Platno extends JPanel implements MouseListener {
         return r;
     }
 
+    /**
+     * Iz pozicije (i, j) poračuna vsa ogljišča hexa
+     * 
+     * @param i
+     * @param j
+     * @return
+     */
     private int[][] extremalPoints(final int i, final int j) {
         final double w = sideLength();
         final double[] tl = topLeft(i, j);
@@ -101,6 +116,14 @@ public class Platno extends JPanel implements MouseListener {
         outlineHex(g2, i, j, Colour.fg);
     }
 
+    /**
+     * Izriše oris hexa na i, j)
+     * 
+     * @param g2
+     * @param i
+     * @param j
+     * @param colour
+     */
     private void outlineHex(final Graphics2D g2, final int i, final int j, final Color colour) {
         final int[][] p = extremalPoints(i, j);
         final double w = sideLength();
@@ -110,6 +133,13 @@ public class Platno extends JPanel implements MouseListener {
         g2.drawPolygon(p[0], p[1], 6);
     }
 
+    /**
+     * V g2 nariše ozadje in barvno obrobo plošče
+     * 
+     * @param g2
+     * @param cx
+     * @param cy
+     */
     private void paintBG(final Graphics2D g2, final int cx, final int cy) {
         g2.setBackground(Colour.bg);
         g2.clearRect(0, 0, getWidth(), getHeight());
