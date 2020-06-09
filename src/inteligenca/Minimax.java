@@ -12,8 +12,8 @@ import java.util.LinkedList;
 public class Minimax {
     final static int INF = Integer.MAX_VALUE;
 
-    private static int modified_bfs(Igra igra, Player player, Koordinati origin) {
-        int size = Igra.size;
+    private static int modified_bfs(final Igra igra, final Player player, final Koordinati origin) {
+        final int size = Igra.size;
 
         final int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
         final boolean[][] visited = new boolean[size][size];
@@ -30,12 +30,12 @@ public class Minimax {
         }
 
         // BFS
-        Queue<Koordinati> q = new LinkedList<>();
+        final Queue<Koordinati> q = new LinkedList<>();
         distance[origin.getX()][origin.getY()] = 0;
         visited[origin.getX()][origin.getY()] = true;
         q.add(origin);
         while (q.size() > 0) {
-            Koordinati tmp = q.remove();
+            final Koordinati tmp = q.remove();
 
             for (final int[] s : smeri) {
                 final int x = tmp.getX() + s[0];
@@ -74,7 +74,7 @@ public class Minimax {
     /**
      * Hevristična funkcija za evaluacijo trenutnega stanja na plošči
      */
-    private static double evaluate(Igra igra, Player player) {
+    private static double evaluate(final Igra igra, final Player player) {
         switch (igra.status) {
             case WIN:
                 if (igra.status.winner == player)
@@ -84,8 +84,8 @@ public class Minimax {
             default: // case IN_PROGRESS:
                 double score = 0;
                 for (int i = 0; i < Igra.size; i++) {
-                    int dist_x = modified_bfs(igra, Player.RED, new Koordinati(i, 0));
-                    int dist_y = modified_bfs(igra, Player.BLUE, new Koordinati(0, i));
+                    final int dist_x = modified_bfs(igra, Player.RED, new Koordinati(i, 0));
+                    final int dist_y = modified_bfs(igra, Player.BLUE, new Koordinati(0, i));
                     score += (dist_y - dist_x) / (Igra.size + 1.0);
                 }
 
@@ -97,7 +97,7 @@ public class Minimax {
         }
     }
 
-    private static double alpha_beta(Igra igra, int depth, Player player, double alpha, double beta) {
+    private static double alpha_beta(final Igra igra, final int depth, final Player player, double alpha, double beta) {
         // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
         if (depth == 0 || igra.status != Igra.Status.IN_PROGRESS) {
             return evaluate(igra, player);
@@ -105,8 +105,8 @@ public class Minimax {
 
         if (igra.onTurn == player) {
             double score = -INF;
-            Set<Koordinati> moves = igra.possibleMoves();
-            for (Koordinati move : moves) {
+            final Set<Koordinati> moves = igra.possibleMoves();
+            for (final Koordinati move : moves) {
                 igra.odigraj(move);
                 score = Math.max(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
                 igra.razveljavi();
@@ -119,8 +119,8 @@ public class Minimax {
 
         } else {
             double score = INF;
-            Set<Koordinati> moves = igra.possibleMoves();
-            for (Koordinati move : moves) {
+            final Set<Koordinati> moves = igra.possibleMoves();
+            for (final Koordinati move : moves) {
                 igra.odigraj(move);
                 score = Math.min(score, alpha_beta(igra, depth - 1, player.opponent(), alpha, beta));
                 igra.razveljavi();
@@ -136,13 +136,13 @@ public class Minimax {
     /**
      * Vrne najboljšo potezo
      */
-    public static Koordinati play(Igra igra) {
+    public static Koordinati play(final Igra igra) {
         Koordinati best_move = new Koordinati(-1, -1);
         double max_score = -INF;
-        Set<Koordinati> moves = igra.possibleMoves();
-        for (Koordinati move : moves) {
+        final Set<Koordinati> moves = igra.possibleMoves();
+        for (final Koordinati move : moves) {
             igra.odigraj(move);
-            double score = alpha_beta(igra, Runner.minimax_depth, igra.onTurn.opponent(), -INF, INF);
+            final double score = alpha_beta(igra, Runner.minimax_depth, igra.onTurn.opponent(), -INF, INF);
             igra.razveljavi();
             if (score > max_score) {
                 max_score = score;

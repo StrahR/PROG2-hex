@@ -36,7 +36,7 @@ public class Igra {
     }
 
     public Set<Koordinati> possibleMoves() {
-        return possible_moves;
+        return new HashSet<Koordinati>(possible_moves);
     }
 
     /**
@@ -93,7 +93,7 @@ public class Igra {
     }
 
     public static boolean isValidMove(final Koordinati p) {
-        return isValidMove(p.getX(), p.getY());
+        return p != null && isValidMove(p.getX(), p.getY());
     }
 
     private boolean checkWin() {

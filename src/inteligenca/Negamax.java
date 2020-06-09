@@ -14,8 +14,8 @@ import java.util.PriorityQueue;
 public class Negamax {
     final static int INF = Integer.MAX_VALUE;
 
-    private static int dijkstra(Igra igra, Player player) {
-        int size = Igra.size;
+    private static int dijkstra(final Igra igra, final Player player) {
+        final int size = Igra.size;
 
         final int[][] smeri = { { 1, 0 }, { 0, 1 }, { -1, 0 }, { 0, -1 }, { -1, 1 }, { 1, -1 } };
 
@@ -28,14 +28,14 @@ public class Negamax {
             public Node() {
             }
 
-            public Node(Koordinati koord, int dist) {
+            public Node(final Koordinati koord, final int dist) {
                 this.koord = koord;
                 this.dist = dist;
                 this.settled = false;
             }
 
             @Override
-            public int compare(Node node1, Node node2) {
+            public int compare(final Node node1, final Node node2) {
                 if (node1.dist < node2.dist)
                     return -1;
                 if (node1.dist > node2.dist)
@@ -52,7 +52,7 @@ public class Negamax {
         }
 
         // BFS
-        Queue<Node> q = new PriorityQueue<Node>(size, new Node());
+        final Queue<Node> q = new PriorityQueue<Node>(size, new Node());
         if (player == Player.RED) {
             for (int i = 0; i < size; i++) {
                 node[i][0].settled = true;
@@ -66,7 +66,7 @@ public class Negamax {
         }
 
         while (q.size() > 0) {
-            Node curr = q.poll();
+            final Node curr = q.poll();
 
             for (final int[] s : smeri) {
                 final int x = curr.koord.getX() + s[0];
@@ -111,7 +111,7 @@ public class Negamax {
     /**
      * Hevristična funkcija za evaluacijo trenutnega stanja na plošči Red positive
      */
-    private static int evaluate(Igra igra) {
+    private static int evaluate(final Igra igra) {
         switch (igra.status) {
             case WIN:
                 if (igra.status.winner == Player.RED)
@@ -119,13 +119,13 @@ public class Negamax {
                 else
                     return -INF;
             default: // case IN_PROGRESS:
-                int score_red = dijkstra(igra, Player.RED);
-                int score_blue = dijkstra(igra, Player.BLUE);
+                final int score_red = dijkstra(igra, Player.RED);
+                final int score_blue = dijkstra(igra, Player.BLUE);
                 return score_blue - score_red;
         }
     }
 
-    public static Object[] alpha_beta(Igra igra, int depth, Player player, int alpha, int beta) {
+    public static Object[] alpha_beta(final Igra igra, final int depth, final Player player, int alpha, int beta) {
         // Mogoce je dobro (potrebno) naredit kopijo igre ne uporabljat lih isto igro
         int sign = 1;
         Koordinati best_move = new Koordinati(-1, -1);
@@ -133,16 +133,16 @@ public class Negamax {
         if (player == Player.BLUE) {
             sign = -1;
         }
-        Set<Koordinati> moves = igra.possibleMoves();
+        final Set<Koordinati> moves = igra.possibleMoves();
 
         if (depth == 0 || igra.status != Igra.Status.IN_PROGRESS || moves.isEmpty()) {
             return new Object[] { best_move, sign * evaluate(igra) };
         }
 
         int best_score = -INF;
-        for (Koordinati move : moves) {
+        for (final Koordinati move : moves) {
             if (igra.odigraj(move)) {
-                int score = -(int) alpha_beta(igra, depth - 1, player.opponent(), -beta, -alpha)[1];
+                final int score = -(int) alpha_beta(igra, depth - 1, player.opponent(), -beta, -alpha)[1];
                 igra.razveljavi();
                 if (score > best_score) {
                     best_move = move;
@@ -164,7 +164,7 @@ public class Negamax {
     /**
      * Vrne najboljšo potezo
      */
-    public static Koordinati play(Igra igra) {
+    public static Koordinati play(final Igra igra) {
         return (Koordinati) alpha_beta(igra, Runner.negamax_depth, igra.onTurn, -INF, INF)[0];
     }
 }

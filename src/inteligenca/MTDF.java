@@ -7,15 +7,15 @@ import splosno.Koordinati;
 import java.util.AbstractMap;
 
 public class MTDF extends Negamax {
-    public static AbstractMap.SimpleEntry<Koordinati, Integer> MTD(Igra igra, final int f, final int depth) {
+    public static AbstractMap.SimpleEntry<Koordinati, Integer> MTD(final Igra igra, final int f, final int depth) {
         int g = f;
         int upper_bound = INF;
         int lower_bound = -INF;
-        Koordinati move = new Koordinati(-1, -1);
+        Koordinati move = null;
 
         while (lower_bound < upper_bound) {
-            int beta = Math.max(g, lower_bound + 1);
-            Object[] ab = alpha_beta(igra, depth, igra.onTurn, beta - 1, beta);
+            final int beta = Math.max(g, lower_bound + 1);
+            final Object[] ab = alpha_beta(igra, depth, igra.onTurn, beta - 1, beta);
             move = (Koordinati) ab[0];
             g = (int) ab[1];
             if (g < beta) {
@@ -31,11 +31,11 @@ public class MTDF extends Negamax {
         }
     }
 
-    public static Koordinati play(Igra igra) {
+    public static Koordinati play(final Igra igra) {
         int val = Runner.mtdf_f;
         Koordinati move = new Koordinati(-1, -1);
         for (int i = 2; i <= Runner.mtdf_depth; i += 2) {
-            var ab = MTD(igra, val, i);
+            final var ab = MTD(igra, val, i);
             move = ab.getKey();
             val = ab.getValue();
         }

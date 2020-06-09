@@ -275,7 +275,7 @@ public class Okno extends JFrame implements ActionListener {
         s_negamax_depth_label_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_negamax_depth_label, s_negamax_depth_label_layout);
 
-        s_negamax_depth = new JSpinner(new SpinnerNumberModel(Runner.negamax_depth, 1, 6, 1));
+        s_negamax_depth = new JSpinner(new SpinnerNumberModel(Runner.negamax_depth, 1, 8, 1));
         final GridBagConstraints s_negamax_depth_layout = new GridBagConstraints();
         s_negamax_depth_layout.gridx = 1;
         s_negamax_depth_layout.gridy = 6;
@@ -291,7 +291,7 @@ public class Okno extends JFrame implements ActionListener {
         s_mtdf_depth_label_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_mtdf_depth_label, s_mtdf_depth_label_layout);
 
-        s_mtdf_depth = new JSpinner(new SpinnerNumberModel(Runner.mtdf_depth, 2, 8, 2));
+        s_mtdf_depth = new JSpinner(new SpinnerNumberModel(Runner.mtdf_depth, 2, 10, 2));
         final GridBagConstraints s_mtdf_depth_layout = new GridBagConstraints();
         s_mtdf_depth_layout.gridx = 1;
         s_mtdf_depth_layout.gridy = 7;
@@ -314,7 +314,7 @@ public class Okno extends JFrame implements ActionListener {
         s_mcts_depth_label_layout.anchor = GridBagConstraints.CENTER;
         s_pane.add(s_mcts_depth_label, s_mcts_depth_label_layout);
 
-        s_mcts_time = new JSpinner(new SpinnerNumberModel(Runner.mcts_time_ms, 100, 5000, 100));
+        s_mcts_time = new JSpinner(new SpinnerNumberModel(Runner.mcts_time_ms, 100, 10000, 100));
         final GridBagConstraints s_mcts_time_layout = new GridBagConstraints();
         s_mcts_time_layout.gridx = 1;
         s_mcts_time_layout.gridy = 8;

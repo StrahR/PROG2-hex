@@ -25,9 +25,9 @@ public class Runner {
     public static int size = 5;
     public static MCTS tree = null;
 
-    public static int minimax_depth = 1;
-    public static int negamax_depth = 2;
-    public static int mtdf_depth = 4;
+    public static int minimax_depth = 2;
+    public static int negamax_depth = 4;
+    public static int mtdf_depth = 6;
     public static int mtdf_f = 0;
     public static int mcts_time_ms = 3000;
 
