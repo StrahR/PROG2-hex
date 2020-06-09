@@ -256,16 +256,19 @@ public class Igra {
     }
 
     @Override
-    public boolean equals(Object other){
-        if (other == null) return false;
-        if (other == this) return true;
-        if (!(other instanceof Igra)) return false;
-        Igra otherIgra = (Igra)other;
-        return (java.util.Arrays.deepHashCode(board) == java.util.Arrays.deepHashCode(otherIgra.board));
+    public boolean equals(Object other) {
+        if (other == null)
+            return false;
+        if (other == this)
+            return true;
+        if (!(other instanceof Igra))
+            return false;
+        Igra otherIgra = (Igra) other;
+        return (hashCode() == otherIgra.hashCode());
     }
 
     @Override
     public int hashCode() {
-        return java.util.Arrays.deepHashCode(board);
+        return java.util.Arrays.deepHashCode(board) + past_moves.hashCode();
     }
 }
