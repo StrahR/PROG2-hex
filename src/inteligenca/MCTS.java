@@ -128,6 +128,9 @@ public class MCTS {
         } else {
             System.out.println("new tree");
             origin = new Node(igra, null, igra.onTurn, null);
+            if (previous_root != null) {
+                clean_tree(previous_root, origin);
+            }
             previous_root = origin;
             origin.value = simulate(origin);
             expand(origin);
@@ -138,16 +141,15 @@ public class MCTS {
         Node best = null;
         double max_score = -INF;
         for (Node child : children) {
-            // if (child.visits == 0) {
-            // continue;
-            // }
+            if (child.visits == 0) {
+                continue;
+            }
             double v = child.value;
             if (v > max_score) {
                 max_score = v;
                 best = child;
             }
         }
-        expand(best);
         // System.out.println("wins: " + best.value + " visits: " + best.visits);
         System.out.println("Cleaned nodes:   " + cleaned);
         System.out.println("Remaining nodes: " + visited_nodes.size());
